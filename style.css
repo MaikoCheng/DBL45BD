@@ -143,6 +143,10 @@ button:hover{
     background-position: center;
 }
 
+#homebutton{
+    display: none;
+}
+
 #info{
     left: 213px;
     width: 50px;
@@ -298,4 +302,10 @@ button:hover{
     color:black;
     text-decoration:none;
     cursor: pointer;
+}
+
+#container {
+    min-width:800px;
+    width: auto !important;
+    width:800px;
 }

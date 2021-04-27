@@ -15,6 +15,16 @@
 <body>
 <div class="buttons">
     <button id="home"></button>
+    <input type="button" id="homebutton" onclick="location.href='index.html';" value="Home" />
+
+    <script type="text/javascript">
+        const realhome = document.getElementById("homebutton");
+        const myhomebutton = document.getElementById("home");
+        myhomebutton.addEventListener("click", function(){
+            realhome.click();
+        });
+    </script>
+
     <button id="info"></button>
 
     <div id="infomodal" class="modal">
