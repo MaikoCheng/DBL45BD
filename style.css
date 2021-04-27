@@ -23,8 +23,9 @@ h1.title {
     background-size: cover;
     padding: auto;
     margin: auto;
-    margin-left: 120px;
+    margin-left: 160px;
     margin-top: 15px;
+    margin-right: 20px;
     width: auto;
     border-radius: 3px;
     float: center;
@@ -33,28 +34,25 @@ h1.title {
 
 #main_text {
     color: #eafffe;
-    margin-left: 120px;
+    margin-left: 140px;
     background-color: #2c2d5e;
     border-radius: 5px;
     padding: auto;
 }
 
-#graph1 {
+#graphs {
     color: #eafffe;
-    margin-left: 120px;
+    margin-left: 140px;
+    display: flex;
+    align-items: middle;
 }
 
-#graph2 {
-    margin-left: 120px;
-    size: auto;
-}
 
-#graph3 {
-    margin-left: 120px;
-}
 
 img {
-    max-width: 90%;
+    max-width: 500px;
+    max-height: 300px;
+    margin-right: 50px;
 }
 
 
@@ -141,7 +139,7 @@ body {
 
 .sidenav {
     height: 100%;
-    width: 120px;
+    width: 140px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -149,6 +147,7 @@ body {
     background-color: #2c2d5e;
     overflow-x: hidden;
     padding-top: 20px;
+    margin-right: 1em;
 }
 
 .sidenav a {
@@ -162,6 +161,22 @@ body {
 
 .sidenav a:hover {
     color: #e48989;
+}
+
+.primary-nav {
+    display: flex;
+    padding: 1em;
+}
+.primary-nav li {
+    margin-left: 2em;
+}
+
+a {
+    color: #999999;
+}
+
+a:hover {
+    color:rgb(255, 255, 255);
 }
 
 @media screen and (max-height: 450px) {
