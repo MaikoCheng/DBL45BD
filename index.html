@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -12,28 +12,62 @@
         <h1 class="title">DBL GROUP 45BD</h1>
     </div>
 </head>
+<body>
+<div class="buttons">
+    <button id="home"></button>
+    <button id="info"></button>
 
+    <div id="infomodal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modaltext">This project was made for the course DBL HTI + Webtech (2IOA0). Our group number is 45BD and we consist of 6 people: Tania-Andreea Goia, Fleur Hamoen, Alexandru Brebeanu, Franciszek Halwa, Tim Stappert and Maiko Cheng</p>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("infomodal");
+        const but = document.getElementById("info");
+        const span = document.getElementsByClassName("close")[0];
+        but.addEventListener("click",function(){
+            modal.style.display = "block";
+        });
+        span.onclick = function(){
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event){
+            if (event.target == modal){
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    <input type="file" id="real-file" hidden="hidden" />
+    <button id="upload"><p id="data">Upload data</p></button>
+
+    <script type="text/javascript">
+        const realFileBtn = document.getElementById("real-file");
+        const mybutton = document.getElementById("data");
+        mybutton.addEventListener("click", function(){
+            realFileBtn.click();
+        });
+    </script>
+
+    
+    <button id="fullscreen1"></button>
+    <button id="fullscreen2"></button>
+</div>
+
+<div class="nameb"><p id="names">Very epic graph sheesh</p></div>
+<div class="namea"><p id="names">Damn this graph bussin bussin</p></div>
+
+<div class="graphsa"></div>
+<div class="graphsb"></div>
 <div id="main_text">
 
-    <body>
         <p>
-            <nav>
-                
-                <ul class="primary-nav">
-                    <li class="current"><a href="#">Home</a></li>
-                    <li><a href="#">Information</a></li>
-                    <li><a href="#">Upload File</a></li>
-                </ul>
-            </nav>
+            sample text
         </p>
-    </body>
 </div>
-
-<div id="graphs">
-    <img src="https://www.cambridgemaths.org/Images/The-trouble-with-graphs.jpg" alt="color:red">
-    <img src="https://www.quickanddirtytips.com/sites/default/files/images/5360/line_graph.png">
-</div>
-
 
 
 <div class="sidenav">
@@ -42,5 +76,5 @@
 
 <div class="navigation">
 </div>
-
+</body>
 </html>
