@@ -40,6 +40,16 @@ h1.title {
     margin-top: 700px;
 }
 
+#main_text2 {
+    color: #eafffe;
+    margin-left: 1032.5px;
+    background-color: #5CC4FF;
+    border-radius: 5px;
+    padding: auto;
+    margin-top: -73px;
+    max-width: 870px;
+}
+
 
 img {
     max-width: 90%;
