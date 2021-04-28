@@ -38,6 +38,7 @@ h1.title {
     border-radius: 5px;
     padding: auto;
     margin-top: 700px;
+    max-width: 870px;
 }
 
 #main_text2 {
