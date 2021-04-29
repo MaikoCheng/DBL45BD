@@ -37,7 +37,7 @@ h1.title {
     background-color: #5CC4FF;
     border-radius: 5px;
     padding: auto;
-    margin-top: 700px;
+    margin-top: 734px;
     max-width: 870px;
 }
 
@@ -68,11 +68,12 @@ p {
 /* Background color */
 
 body {
-    background-color: #0B0C10;
-    /*background-image: linear-gradient(to right, rgba(22, 0, 50, 1), #13151f);*/
     background-image: url(graphs-and-charts-information-over-world-map-background-4k-free-video.jpg);
+    height: 100%;
     background-size:cover;
+
 }
+
 
 
 /* Making the grid for ease */
@@ -131,7 +132,7 @@ button{
     background-color: rgb(224, 68, 76);
     color:#ffffff;
     text-align: center;
-    white-space:normal !important;
+    white-space:normal !important; 
     word-wrap: break-word;
     border-radius: 5px;
     cursor: pointer;
@@ -217,21 +218,37 @@ button:hover{
     margin:auto;
     margin-left:145px;
     margin-top:70px;
-    background:rgb(196, 196, 196, 0.5);
+    background:rgb(8,20,28,0.8);
     width: 870px;
     height: 600px;
     border-radius: 3px;
     border-style: groove;
     border-width: 2px;
     border-color: white;
+    color:white;
 }
 
+.axisx text{
+    fill:white;
+}
+
+.axisx line{
+    stroke:white;
+}
+
+.axisy text{
+    fill:white;
+}
+
+.axisy line{
+    stroke:white;
+}
 .graphsb{
     position: absolute;
     margin:auto;
     margin-left:1032.5px;
     margin-top:70px;
-    background:rgb(196, 196, 196, 0.5);
+    background:rgb(8,20,28,0.8);
     width: 870px;
     height: 600px;
     border-radius: 3px;
