@@ -285,7 +285,7 @@ var myColor = d3.scaleLinear()
   .domain([-0.07, 0, 0.07])
 
 //Read the data
-d3.csv("data.csv", function(data) {
+d3.csv("https://raw.githubusercontent.com/MaikoCheng/DBL45BD/main/enron-v1.csv", function(data) {
   //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
   var nestedData = d3.nest()
         .key(d => d.fromId)
