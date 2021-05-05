@@ -96,7 +96,7 @@
   
   // Read dummy data
   d3.csv("https://raw.githubusercontent.com/MaikoCheng/DBL45BD/main/enron-v1.csv", function( data) {
-    data = data.filter(function(d,i){ return i<1000 })
+    //data = data.filter(function(d,i){ return i<1000 })
     data = data.sort(function (a,b) {return d3.ascending(a.fromJobtitle, b.fromJobtitle);});
     let tokeep = ["Employee", "Vice President", "Manager", "Unknown","President","Trader","CEO","Managing Director","Director","In House Lawyer"];
     data = data.filter(function(d,i){ return tokeep.indexOf(d.fromJobtitle) >= 0 })
