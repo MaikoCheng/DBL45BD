@@ -37,18 +37,18 @@ h1.title {
     background-color: #5CC4FF;
     border-radius: 5px;
     padding: auto;
-    margin-top: 734px;
-    max-width: 870px;
+    margin-top: 39%;
+    width: 45.6%;
 }
 
 #main_text2 {
     color: #eafffe;
-    margin-left: 1032.5px;
+    margin-left:54.1%;
     background-color: #5CC4FF;
     border-radius: 5px;
     padding: auto;
-    margin-top: -73px;
-    max-width: 870px;
+    margin-top: -3.8%;
+    width: 45.6%;
 }
 
 
@@ -145,7 +145,8 @@ button{
 }
 
 button:hover{
-    background-color:rgb(255, 160, 239);
+    background-color:rgb(255, 49, 145);
+    transition: all 0.8s;
 }
 
 #home{
@@ -182,7 +183,7 @@ button:hover{
 }
 
 #fullscreen1{
-    left: 960px;
+    left: 50%;
     top: 137px;
     width: 50px;
     background-image: url(Group\ 1.png);
@@ -191,20 +192,28 @@ button:hover{
     font-size: 20px;
     text-align: center;
     z-index: 100;
-    background-color:rgba(92, 196, 255, 1);
 }
 
 #fullscreen2{
-    left: 1848px;
+    left: 96%;
     top: 137px;
     width: 50px;
     background-image: url(Group\ 1.png);
     background-repeat: no-repeat;
     background-position: 1.4px;
-    font-size: 20px;
-    text-align: center;
     z-index: 100;
-    background-color: rgba(92, 196, 255, 1);
+}
+
+#fullscreenclose{
+    left: 96%;
+    top: 137px;
+    background-image: url(icon-close-512.png);
+    background-repeat: no-repeat;
+    background-size: 35px;
+    background-position: center;
+    width: 50px;
+    z-index:1000;
+    display:none;
 }
 
 #data{
@@ -219,13 +228,16 @@ button:hover{
     margin-left:145px;
     margin-top:70px;
     background:rgb(8,20,28,0.8);
-    width: 870px;
+    width: 45.5%;
     height: 600px;
     border-radius: 3px;
     border-style: groove;
     border-width: 2px;
     border-color: white;
     color:white;
+    flex-wrap: nowrap;
+    justify-content: left;
+    
 }
 
 .axisx text{
@@ -246,28 +258,29 @@ button:hover{
 .graphsb{
     position: absolute;
     margin:auto;
-    margin-left:1032.5px;
+    margin-left:53.7%;
     margin-top:70px;
     background:rgb(8,20,28,0.8);
-    width: 870px;
+    width: 45.5%;
     height: 600px;
     border-radius: 3px;
     border-style: groove;
     border-width: 2px;
     border-color: white;
+    flex-wrap: nowrap;
 }
 
 .nameb{
     position: absolute;
     margin:auto;
-    margin-left:1042.5px;
+    margin-left:54.3%;
     margin-top:80px;
     background-color: rgba(92, 196, 255, 1);
     border-color:#0B0C10;
     min-width: 100px;
     max-height: 50px;
     border-radius: 3px;
-    z-index:100;
+    z-index:1000;
     border-style: groove;
     border-width: 2px;
     
@@ -283,7 +296,7 @@ button:hover{
     min-width: 100px;
     max-height: 50px;
     border-radius: 3px;
-    z-index:100;
+    z-index:1000;
     border-style: groove;
     border-width: 2px;
 }

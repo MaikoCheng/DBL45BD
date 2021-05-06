@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>DBL 45BD</title>
     <meta name="The dbl workgroup 45" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="style.css">
     <div id="title">
         <h1 class="title">DBL GROUP 45BD</h1>
@@ -20,62 +20,8 @@
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <body>
 
-<div class="buttons">
-    <button id="home"></button>
-    <input type="button" id="homebutton" onclick="location.href='index.html';" value="Home" />
-
-    <script type="text/javascript">
-        const realhome = document.getElementById("homebutton");
-        const myhomebutton = document.getElementById("home");
-        myhomebutton.addEventListener("click", function(){
-            realhome.click();
-        });
-    </script>
-
-    <button id="info"></button>
-
-    <div id="infomodal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p id="modaltext">This project was made for the course DBL HTI + Webtech (2IOA0). Our group number is 45BD and we consist of 6 people: Tania-Andreea Goia, Fleur Hamoen, Alexandru Brebeanu, Franciszek Halwa, Tim Stappert and Maiko Cheng</p>
-        </div>
-    </div>
-
-    <script>
-        const modal = document.getElementById("infomodal");
-        const but = document.getElementById("info");
-        const span = document.getElementsByClassName("close")[0];
-        but.addEventListener("click",function(){
-            modal.style.display = "block";
-        });
-        span.onclick = function(){
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event){
-            if (event.target == modal){
-                modal.style.display = "none";
-            }
-        }
-    </script>
-    <input type='file' id="real-file" accept='csv/*' hidden="hidden" onchange='openFile(event)'/>
-    <button id="upload"><p id="data">Upload data</p></button>
-
-    <script type="text/javascript">
-        const realFileBtn = document.getElementById("real-file");
-        const mybutton = document.getElementById("data");
-        mybutton.addEventListener("click", function(){
-            realFileBtn.click();
-        });
-    </script>
-
-    
-    <button id="fullscreen1"></button>
-    <button id="fullscreen2"></button>
-</div>
-
-<div class="nameb"><p id="names">Very epic graph sheesh</p></div>
-<div class="namea"><p id="names">Damn this graph bussin bussin</p></div>
+<div class="nameb" id="nameb"><p id="names">Very epic graph sheesh</p></div>
+<div class="namea" id="namea"><p id="names">Damn this graph bussin bussin</p></div>
 
 <div class="graphsa" id=my_dataviz></div>
 
@@ -88,8 +34,8 @@
   // append the svg object to the body of the page
   var svg = d3.select("#my_dataviz")
     .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", '100%')
+      .attr("height", "100%")
       .call(d3.zoom().on("zoom", function () {
        svg.attr("transform", d3.event.transform)
         }))
@@ -232,8 +178,11 @@
       // append the svg object to the body of the page
       var svg2 = d3.select("#my_dataviz2")
       .append("svg")
-        .attr("width", width2 + margin2.left + margin2.right)
-        .attr("height", height2 + margin2.top + margin2.bottom)
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .call(d3.zoom().on("zoom", function () {
+       svg2.attr("transform", d3.event.transform)
+        }))
       .style("background-color", "transparent")
       .append("g")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
@@ -395,10 +344,6 @@
 
 <div class="graphsb" id=my_dataviz2></div>
 
-<script>
-    
-
-</script>
 
 <div id="main_text">
         <p>
@@ -417,6 +362,121 @@
 </div>
 
 <div class="navigation">
+</div>
+
+<div class="buttons">
+  <button id="home"></button>
+  <input type="button" id="homebutton" onclick="location.href='index.html';" value="Home" />
+
+  <script type="text/javascript">
+      const realhome = document.getElementById("homebutton");
+      const myhomebutton = document.getElementById("home");
+      myhomebutton.addEventListener("click", function(){
+          realhome.click();
+      });
+  </script>
+
+  <button id="info"></button>
+
+  <div id="infomodal" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="modaltext">This project was made for the course DBL HTI + Webtech (2IOA0). Our group number is 45BD and we consist of 6 people: Tania-Andreea Goia, Fleur Hamoen, Alexandru Brebeanu, Franciszek Halwa, Tim Stappert and Maiko Cheng</p>
+      </div>
+  </div>
+
+  <script>
+      const modal = document.getElementById("infomodal");
+      const but = document.getElementById("info");
+      const span = document.getElementsByClassName("close")[0];
+      but.addEventListener("click",function(){
+          modal.style.display = "block";
+      });
+      span.onclick = function(){
+          modal.style.display = "none";
+      }
+
+      window.onclick = function(event){
+          if (event.target == modal){
+              modal.style.display = "none";
+          }
+      }
+  </script>
+  <input type='file' id="real-file" accept='csv/*' hidden="hidden" onchange='openFile(event)'/>
+  <button id="upload"><p id="data">Upload data</p></button>
+
+  <script type="text/javascript">
+      const realFileBtn = document.getElementById("real-file");
+      const mybutton = document.getElementById("data");
+      mybutton.addEventListener("click", function(){
+          realFileBtn.click();
+      });
+  </script>
+
+  <button id="fullscreenclose"></button>  
+  <button id="fullscreen1"></button>
+
+  <script type="text/javascript">
+    const buttonful1 = document.getElementById("fullscreen1");
+    buttonful1.addEventListener("click", function(){
+      document.getElementById("my_dataviz").style.width = "91.5%";
+      document.getElementById("my_dataviz").style.height = "80%";
+      document.getElementById("my_dataviz").style.zIndex = 999;
+      svg.attr("width", '200%')
+      document.getElementById("fullscreenclose").style.display = "block";
+      document.getElementById("nameb").style.display = "none";
+      document.getElementById("my_dataviz2").style.display = "none";
+      document.getElementById("main_text").style.display = "none";
+      document.getElementById("main_text2").style.display = "none";
+      document.getElementById("fullscreen2").style.display = "none";
+      document.getElementById("fullscreen1").style.display = "none";
+    });
+  </script> 
+
+  <button id="fullscreen2"></button>
+  <script type="text/javascript">
+      const buttonful2 = document.getElementById("fullscreen2");
+      buttonful2.addEventListener("click", function(){
+      document.getElementById("fullscreenclose").style.display = "block";
+      document.getElementById("my_dataviz2").style.width = "91.5%";
+      document.getElementById("my_dataviz2").style.height = "80%";
+      document.getElementById("my_dataviz2").style.zIndex = 999;
+      document.getElementById("my_dataviz2").style.marginLeft = '145px';
+      document.getElementById("namea").style.display = "none";
+      document.getElementById("my_dataviz").style.display = "none";
+      document.getElementById("main_text").style.display = "none";
+      document.getElementById("main_text2").style.display = "none";
+      document.getElementById("fullscreen1").style.display = "none";
+      document.getElementById("nameb").style.marginLeft = "155px";
+      
+    });
+  </script>
+
+  <script type="text/javascript">
+      const buttonfulclose = document.getElementById("fullscreenclose");
+      buttonfulclose.addEventListener("click", function(){
+        document.getElementById("fullscreenclose").style.display = "none";
+        document.getElementById("my_dataviz2").style.width = "45.4%";
+        document.getElementById("my_dataviz2").style.height = "600px";
+        document.getElementById("my_dataviz2").style.zIndex = 1;
+        document.getElementById("my_dataviz2").style.marginLeft = "53.7%";
+        document.getElementById("my_dataviz").style.width = "45.4%";
+        document.getElementById("my_dataviz").style.height = "600px";
+        document.getElementById("my_dataviz").style.zIndex = 1;
+        document.getElementById("nameb").style.display = "block";
+        document.getElementById("namea").style.display = "block";
+        document.getElementById("my_dataviz").style.display = "block";
+        document.getElementById("main_text").style.display = "block";
+        document.getElementById("main_text2").style.display = "block";
+        document.getElementById("fullscreen1").style.display = "block";
+        document.getElementById("my_dataviz2").style.display = "block";
+        document.getElementById("main_text").style.display = "block";
+        document.getElementById("main_text2").style.display = "block";
+        document.getElementById("fullscreen2").style.display = "block";
+        document.getElementById("nameb").style.marginLeft = "54.3%";
+      })
+  </script>
+
 </div>
 </body>
 </html>
