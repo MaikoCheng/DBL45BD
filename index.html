@@ -28,7 +28,7 @@
 <script>
   // set the dimensions and margins of the graph
   var margin = {top: 100, right: 50, bottom: 160, left: 50},
-    width = 870 - margin.left - margin.right,
+    width = 1750 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
   
   // append the svg object to the body of the page
@@ -79,7 +79,7 @@
       
         // A linear scale to position the nodes on the X axis
         var x = d3.scalePoint()
-          .range([0, width])
+          .range([0, width + 750])
           .domain(allNodes)
       
         // In my input data, links are provided between nodes -id-, NOT between node names.
