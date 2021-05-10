@@ -352,3 +352,12 @@ button:hover{
     width: auto !important;
     width:800px;
 }
+
+#infotext{
+    color: #eafffe;
+    margin-left: 145px;
+    background-color: #5CC4FF;
+    border-radius: 5px;
+    padding: auto;
+    margin-top: 4%;
+}
