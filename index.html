@@ -28,7 +28,7 @@
 <script>
   // set the dimensions and margins of the graph
   var margin = {top: 100, right: 50, bottom: 160, left: 50},
-    width = 870 - margin.left - margin.right,
+    width = 1800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
   
   // append the svg object to the body of the page
@@ -45,7 +45,7 @@
   
   // Read dummy data
 
-  // Imput data
+  // Input data
 
     var openFile = function(event) {
     var input = event.target;
@@ -79,7 +79,7 @@
       
         // A linear scale to position the nodes on the X axis
         var x = d3.scalePoint()
-          .range([0, width])
+          .range([0, width + 750])
           .domain(allNodes)
       
         // In my input data, links are provided between nodes -id-, NOT between node names.
@@ -376,8 +376,32 @@
       });
   </script>
 
-  <a href="info.html"><button id="info"></button></a>
+  <button id="info"></button>
 
+  <div id="infomodal" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="modaltext">This project was made for the course DBL HTI + Webtech (2IOA0). Our group number is 45BD and we consist of 6 people: Tania-Andreea Goia, Fleur Hamoen, Alexandru Brebeanu, Franciszek Halwa, Tim Stappert and Maiko Cheng</p>
+      </div>
+  </div>
+
+  <script>
+      const modal = document.getElementById("infomodal");
+      const but = document.getElementById("info");
+      const span = document.getElementsByClassName("close")[0];
+      but.addEventListener("click",function(){
+          modal.style.display = "block";
+      });
+      span.onclick = function(){
+          modal.style.display = "none";
+      }
+
+      window.onclick = function(event){
+          if (event.target == modal){
+              modal.style.display = "none";
+          }
+      }
+  </script>
   <input type='file' id="real-file" accept='csv/*' hidden="hidden" onchange='openFile(event)'/>
   <button id="upload"><p id="data">Upload data</p></button>
 
