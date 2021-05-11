@@ -18,7 +18,8 @@ html {
 
 h1.title {
     align-self: auto;
-    font-size: 34px;
+    font-family:Helvetica;
+    font-size: 32px;
     font-weight: bold;
     color: #ffffff;
     text-align: center;
@@ -32,26 +33,37 @@ h1.title {
     border-radius: 3px;
     float: center;
     top: 110%;
+    border-radius: 3px;
+    border-width: 2px;
+    border-style:groove;
+    border-color: #ffffff;
 }
 
 #main_text {
-    color: #eafffe;
+    color: #ffffff;
     margin-left: 145px;
     background-color: var(--main-bg-color);
     border-radius: 5px;
     padding: auto;
     margin-top: 39%;
-    width: 45.6%;
+    width: 45.9%;
+    border-width: 2px;
+    border-style:groove;
+    border-color: #ffffff;
+    
 }
 
 #main_text2 {
-    color: #eafffe;
-    margin-left:54.1%;
+    color: #ffffff;
+    margin-left:54.15%;
     background-color: var(--main-bg-color);
     border-radius: 5px;
     padding: auto;
-    margin-top: -3.8%;
+    margin-top: -4.85%;
     width: 45.6%;
+    border-width: 2px;
+    border-style:groove;
+    border-color: #ffffff;
 }
 
 
@@ -101,6 +113,9 @@ body {
     background-color: var(--main-bg-color);
     overflow-x: hidden;
     padding-top: 20px;
+    border-width: 2px;
+    border-style:groove;
+    border-color: #ffffff;
 }
 
 .sidenav a {
@@ -133,7 +148,8 @@ button{
     height: 50px;
     top: 65px;
     background-color: rgb(255, 200, 87);
-    color:#ffffff;
+    color:#fff789;
+    border-color:#fff9c4;
     text-align: center;
     white-space:normal !important; 
     word-wrap: break-word;
@@ -145,12 +161,23 @@ button{
     order: 1;
     flex-grow: 0;
     margin: 0px 0px;
+
+    transition: 0.5s transform ease-in-out;
+    will-change: transform;
+    overflow: hidden;
 }
 
-button:hover{
-    background-color:rgb(255, 150, 199);
-    transition: all 0.8s;
+
+button:hover::after{
+    transform: translate(5, 0)
 }
+button:hover{
+    border: 2px solid transparent;
+    color: indigo;
+    transform: scale(1.05);
+    will-change: transform;
+}
+
 
 #home{
     left: 153px;
@@ -230,7 +257,7 @@ button:hover{
     margin:auto;
     margin-left:145px;
     margin-top:70px;
-    background:rgb(8,20,28,0.8);
+    background:rgba(100, 99, 99, 0.411);
     width: 45.5%;
     height: 600px;
     border-radius: 3px;
@@ -263,7 +290,7 @@ button:hover{
     margin:auto;
     margin-left:53.7%;
     margin-top:70px;
-    background:rgb(8,20,28,0.8);
+    background:rgba(100, 99, 99, 0.411);
     width: 45.5%;
     height: 600px;
     border-radius: 3px;
@@ -279,7 +306,7 @@ button:hover{
     margin-left:54.3%;
     margin-top:80px;
     background-color: var(--main-bg-color);
-    border-color:#0B0C10;
+    border-color:#ffffff;
     min-width: 100px;
     max-height: 50px;
     border-radius: 3px;
@@ -295,7 +322,7 @@ button:hover{
     margin-left:155px;
     margin-top:80px;
     background-color: var(--main-bg-color);
-    border-color:#0B0C10;
+    border-color:#ffffff;
     min-width: 100px;
     max-height: 50px;
     border-radius: 3px;
@@ -341,3 +368,79 @@ button:hover{
     padding: auto;
     margin-top: 4%;
 }
+
+#checkbox{
+    z-index: 10000000;
+    position:absolute;
+    margin-left: 0px;
+    margin-top: 80px;
+    max-width: 145px;
+}
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    color: #fff;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: rgb(255, 200, 87);
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
