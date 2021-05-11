@@ -10,6 +10,9 @@ html {
     font-family: "Helvetica Neue", Helvetica, Arial;
 }
 
+:root{
+    --main-bg-color: rgb(61, 149, 179);
+}
 
 /* Making the title of the website */
 
@@ -17,9 +20,9 @@ h1.title {
     align-self: auto;
     font-size: 34px;
     font-weight: bold;
-    color: #eafffe;
+    color: #ffffff;
     text-align: center;
-    background-color: #5CC4FF;
+    background-color: var(--main-bg-color);
     background-size: cover;
     padding: auto;
     margin: auto;
@@ -34,7 +37,7 @@ h1.title {
 #main_text {
     color: #eafffe;
     margin-left: 145px;
-    background-color: #5CC4FF;
+    background-color: var(--main-bg-color);
     border-radius: 5px;
     padding: auto;
     margin-top: 39%;
@@ -44,7 +47,7 @@ h1.title {
 #main_text2 {
     color: #eafffe;
     margin-left:54.1%;
-    background-color: #5CC4FF;
+    background-color: var(--main-bg-color);
     border-radius: 5px;
     padding: auto;
     margin-top: -3.8%;
@@ -68,7 +71,7 @@ p {
 /* Background color */
 
 body {
-    background-image: url(graphs-and-charts-information-over-world-map-background-4k-free-video.jpg);
+    background-color: #272727;
     height: 100%;
     background-size:cover;
 
@@ -95,7 +98,7 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #5CC4FF;
+    background-color: var(--main-bg-color);
     overflow-x: hidden;
     padding-top: 20px;
 }
@@ -110,7 +113,7 @@ body {
 }
 
 .sidenav a:hover {
-    color: #e489a7;
+    color: #ffa5c3;
 }
 
 @media screen and (max-height: 450px) {
@@ -129,7 +132,7 @@ button{
     margin: auto;
     height: 50px;
     top: 65px;
-    background-color: rgb(224, 68, 76);
+    background-color: rgb(255, 200, 87);
     color:#ffffff;
     text-align: center;
     white-space:normal !important; 
@@ -145,7 +148,7 @@ button{
 }
 
 button:hover{
-    background-color:rgb(255, 49, 145);
+    background-color:rgb(255, 150, 199);
     transition: all 0.8s;
 }
 
@@ -275,7 +278,7 @@ button:hover{
     margin:auto;
     margin-left:54.3%;
     margin-top:80px;
-    background-color: rgba(92, 196, 255, 1);
+    background-color: var(--main-bg-color);
     border-color:#0B0C10;
     min-width: 100px;
     max-height: 50px;
@@ -291,7 +294,7 @@ button:hover{
     margin:auto;
     margin-left:155px;
     margin-top:80px;
-    background-color: rgba(92, 196, 255, 1);
+    background-color: var(--main-bg-color);
     border-color:#0B0C10;
     min-width: 100px;
     max-height: 50px;
@@ -308,30 +311,7 @@ button:hover{
     margin-right: 7px;
 }
 
-.modal{
-    display: none;
-    position:fixed;
-    z-index:1000;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-    overflow:auto;
-}
 
-.modal-content{
-    background-color: rgba(92, 196, 255, 1);
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 3px;
-    border: 2px solid rgb(0, 0, 0);
-    width: 80%;
-}
-
-#modaltext{
-    color:aliceblue;
-    font-size: 30px;
-}
 
 .close{
     color:rgb(0, 0, 0);
@@ -356,7 +336,7 @@ button:hover{
 #infotext{
     color: #eafffe;
     margin-left: 145px;
-    background-color: #5CC4FF;
+    background-color: var(--main-bg-color);
     border-radius: 5px;
     padding: auto;
     margin-top: 4%;

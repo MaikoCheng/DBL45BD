@@ -61,7 +61,7 @@
 
 
         // List of node names
-        var allNodes = data.map(function(d){return d.fromEmail})
+        var allNodes = data.map(function(d){return d.fromEmail.replace(/@enron.com/g, "")})
       
         // List of groups
         var allGroups = data.map(function(d){return d.fromJobtitle})
@@ -92,7 +92,7 @@
         data.forEach(function (n) {
           idToNode2[n.toId] = n;
         });
-      
+        console.log(idToNode)
         // Add the links
         var links = svg
           .selectAll('mylinks')
@@ -100,8 +100,8 @@
           .enter()
           .append('path')
           .attr('d', function (d) {
-            start = x(idToNode[d.fromId].fromEmail)    // X position of start node on the X axis
-            end = x(idToNode2[d.toId].toEmail)      // X position of end node
+            start = x(idToNode[d.fromId].fromEmail.replace(/@enron.com/g, ""))    // X position of start node on the X axis
+            end = x(idToNode2[d.toId].toEmail.replace(/@enron.com/g, ""))      // X position of end node
             return ['M', start, height-30,    // the arc starts at the coordinate x=start, y=height-30 (where the starting node is)
               'A',                            // This means we're gonna build an elliptical arc
               (start - end)/2, ',',    // Next 2 lines are the coordinates of the inflexion point. Height of this point is proportional with start - end distance
@@ -119,7 +119,7 @@
           .data(data.sort(function(a,b) { return +b.fromId - +a.fromId }))
           .enter()
           .append("circle")
-            .attr("cx", function(d){ return(x(d.fromEmail))})
+            .attr("cx", function(d){ return(x(d.fromEmail.replace(/@enron.com/g, "").replace(/@enron.com/g, "")))})
             .attr("cy", height-30)
             .attr("r", function(d){ return(size(d.fromId)/3)})
             .style("fill", function(d){ return color(d.fromJobtitle)})
@@ -133,10 +133,10 @@
           .append("text")
             .attr("x", 0)
             .attr("y", 0)
-            .text(function(d){ return(d.fromEmail)} )
+            .text(function(d){ return(d.fromEmail.replace(/@enron.com/g, ""))} )
             .style("text-anchor", "end")
-            .attr("transform", function(d){ return( "translate(" + (x(d.fromEmail)) + "," + (height-15) + ")rotate(-45)")})
-            .style("font-size", 6)
+            .attr("transform", function(d){ return( "translate(" + (x(d.fromEmail.replace(/@enron.com/g, ""))) + "," + (height-15) + ")rotate(-45)")})
+            .style("font-size", 10)
             .style("fill","white")
       
         // Add the highlighting functionality
@@ -153,7 +153,7 @@
               .style('stroke-opacity', function (link_d) { return link_d.fromEmail === d.fromEmail || link_d.toEmail === d.fromEmail ? 1 : .2;})
               .style('stroke-width', function (link_d) { return link_d.fromEmail === d.fromEmail || link_d.toEmail === d.fromEmail ? 4 : 1;})
             labels
-              .style("font-size", function(label_d){ return label_d.fromEmail === d.fromEmail ? 16 : 2 } )
+              .style("font-size", function(label_d){ return label_d.fromEmail === d.fromEmail ? 40 : 2 } )
               .attr("y", function(label_d){ return label_d.fromEmail === d.fromEmail ? 10 : 0 } )
       
           })
@@ -244,7 +244,7 @@
 
       // Build color scale
       var myColor = d3.scaleLinear()
-          .range(["red", "white", "blue"])
+          .range(["yellow", "white", "rgb(61, 149, 179)"])
           .domain([-0.07, 0, 0.07])
 
       //Read the data
@@ -322,8 +322,8 @@
             .data(groupedData)//, function(d) {return d.key + d.values.key;})
             .enter()      
             .append("rect")
-              .attr("stroke", "black")
-              .style('stroke-width', '0.5px')
+              //.attr("stroke", "black")
+              //.style('stroke-width', '0.5px')
               .style('stroke-opacity', .5)
               .attr("rx", .75)
               .attr("ry", .75)
