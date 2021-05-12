@@ -31,7 +31,105 @@
         data = data.sort(function (a,b) {return d3.ascending(a.fromJobtitle, b.fromJobtitle);});
         tokeep.sort();
         data = data.filter(function(d,i){ return tokeep.indexOf(d.fromJobtitle) >= 0 })
-
+        const ceobutton = document.getElementById("CEO");
+        ceobutton.addEventListener("click", function(){
+        if (ceobutton.checked == false){
+          tokeep.splice(tokeep.indexOf("CEO"), 1)
+        }else{
+          tokeep.push("CEO");
+        }
+          tokeep.sort();
+        });
+    
+        const vpbutton = document.getElementById("Vice President");
+        vpbutton.addEventListener("click", function(){
+            if (vpbutton.checked == false){
+                tokeep.splice(tokeep.indexOf("Vice President"), 1)
+            }else{
+                tokeep.push("Vice President");
+            }
+            tokeep.sort();
+        });
+        const empbutton = document.getElementById("Employee");
+        empbutton.addEventListener("click", function(){
+            if (empbutton.checked == false){
+                tokeep.splice(tokeep.indexOf("Employee"), 1)
+            }else{
+                tokeep.push("Employee");
+            }
+            tokeep.sort();
+        });
+    
+        const manbutton = document.getElementById("Manager");
+        manbutton.addEventListener("click", function(){
+            if (manbutton.checked == false){
+                tokeep.splice(tokeep.indexOf("Manager"), 1)
+            }else{
+                tokeep.push("Manager");
+            }
+            tokeep.sort();
+        });
+    
+        const unkbutton = document.getElementById("Unknown");
+        unkbutton.addEventListener("click", function(){
+            if (unkbutton.checked == false){
+                tokeep.splice(tokeep.indexOf("Unknown"), 1)
+            }else{
+                tokeep.push("Unknown");
+            }
+            tokeep.sort();
+        });
+    
+        const prebutton = document.getElementById("President");
+        prebutton.addEventListener("click", function(){
+            if (prebutton.checked == false){
+                tokeep.splice(tokeep.indexOf("President"), 1)
+            }else{
+                tokeep.push("President");
+            }
+            tokeep.sort();
+        });
+    
+        const trabutton = document.getElementById("Trader");
+        trabutton.addEventListener("click", function(){
+            if (trabutton.checked == false){
+                tokeep.splice(tokeep.indexOf("Trader"), 1)
+            }else{
+                tokeep.push("Trader");
+            }
+            tokeep.sort();
+        });
+    
+        const madbutton = document.getElementById("Managing Director");
+        madbutton.addEventListener("click", function(){
+            if (madbutton.checked == false){
+                tokeep.splice(tokeep.indexOf("Managing Director"), 1)
+            }else{
+                tokeep.push("Managing Director");
+            }
+            tokeep.sort();
+        });
+    
+        const dirbutton = document.getElementById("Director");
+        dirbutton.addEventListener("click", function(){
+            if (dirbutton.checked == false){
+                tokeep.splice(tokeep.indexOf("Director"), 1)
+            }else{
+                tokeep.push("Director");
+            }
+            tokeep.sort();
+        });
+    
+        const ihlbutton = document.getElementById("In House Lawyer");
+        ihlbutton.addEventListener("click", function(){
+            if (ihlbutton.checked == false){
+                tokeep.splice(tokeep.indexOf("In House Lawyer"), 1)
+                svg.selectAll(".CEO").remove()
+            }else{
+                tokeep.push("In House Lawyer");
+            }
+            tokeep.sort();
+        });
 
         // List of node names
         var allNodes = data.map(function(d){return d.fromEmail.replace(/@enron.com/g, "")})
