@@ -219,7 +219,6 @@
                 .style('opacity', "2%")
               d3.select(this)
                 .style('opacity', 1)
-                console.log(this)
             // Highlight the connections
             links
               .style('stroke', function (link_d) { return link_d.fromEmail === d.fromEmail || link_d.toEmail === d.fromEmail ? color(d.fromJobtitle) : '#b8b8b8';})
