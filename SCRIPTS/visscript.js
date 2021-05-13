@@ -395,6 +395,49 @@
         })
         //Look at the console to get a better understanding of all objects in groupedData.
         console.log(groupedData);
+        
+        
+        
+        //Create a legend
+        var legend = d3.legendColor()
+          .cells(7)
+          .labelFormat(d3.format(".2f"))
+          .scale(myColor)
+          .shapeWidth(50)
+          .shapeHeight(50)
+          .on('cellover',function(d){
+            if(d<0){
+              tooltip.style("opacity", 1)
+                  .html("This value means a negative average sentiment")
+                  .style("left", (d3.mouse(this)[0]+70) + "px")
+                  .style("top", (d3.mouse(this)[1]) + "px");
+            }
+            else if(d==0){
+              tooltip.style("opacity", 1)
+                  .html("This value means a neutral average sentiment")
+                  .style("left", (d3.mouse(this)[0]+70) + "px")
+                  .style("top", (d3.mouse(this)[1]) + "px");
+            }
+            else{
+              tooltip.style("opacity", 1)
+                  .html("This value means a positive average sentiment")
+                  .style("left", (d3.mouse(this)[0]+70) + "px")
+                  .style("top", (d3.mouse(this)[1]) + "px");
+            }
+          })
+          .on('cellout', function(d){
+              tooltip.style("opacity", 0)
+          }); 
+        
+      //Create an actual svg el. for the legend
+      svg2.append("g")
+        .attr("transform", "translate(-200 ,50)")
+        .call(legend)
+        .selectAll("text")
+            .style("font-family", "Helvetica")
+            .attr("fill", "white");
+
+      
 
 
         // create a tooltip
