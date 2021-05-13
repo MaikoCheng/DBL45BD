@@ -397,7 +397,7 @@
         console.log(groupedData);
         
         
-       /* 
+        
         //Create a legend
         var legend = d3.legendColor()
           .cells(7)
@@ -436,7 +436,7 @@
         .selectAll("text")
             .style("font-family", "Helvetica")
             .attr("fill", "white");
-            */
+            
 
       
 
