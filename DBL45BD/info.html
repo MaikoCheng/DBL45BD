@@ -8,17 +8,28 @@
     <meta name="The dbl workgroup 45" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="style.css">
+    <script defer src="https://unpkg.com/swup@latest/dist/swup.min.js"></script>
+    <script defer src="swup.js"></script>
 </head>
-<body id="infobg">
+<body class="transition-fade" id="infobg">
 <div class="buttons">
-  <button id="home2"><p id="homebuttontext">HOME</p></button>
-  <input type="button" id="homebutton2" onclick="location.href='index.html';" value="Home" />
+  <button id="home2"><p id="homebuttontext">GRAPHS</p></button>
+  <input type="button" id="homebutton2" onclick="location.href='/graphs.html';" value="GRAPHS" />
+  <button id="home5"><p id="homebuttontext">HOME</p></button>
+  <input type="button" id="homebutton5" onclick="location.href='/index.html';" value="Home" />
 </div>
   <script type="text/javascript">
       const realhome = document.getElementById("homebutton2");
       const myhomebutton = document.getElementById("home2");
       myhomebutton.addEventListener("click", function(){
           realhome.click();
+          document.getElementById("homebuttontext").style.color = "white";
+      });
+
+      const realhome5 = document.getElementById("homebutton5");
+      const myhomebutton5 = document.getElementById("home5");
+      myhomebutton5.addEventListener("click", function(){
+          realhome5.click();
           document.getElementById("homebuttontext").style.color = "white";
       });
   </script>

@@ -200,7 +200,7 @@ button:hover{
     background-position: center;
 }
 #home2{
-    left:5px;
+    left:85px;
     top:5px;
     min-width: 50px;
     color:black;
@@ -501,7 +501,7 @@ button:hover{
     margin-left:auto;
     margin-top: 15%;
     width: 100%;
-    height:600px;
+    height:37vw;
     justify-content: center;
     align-items: center;
     align-content: center;
@@ -533,8 +533,8 @@ button:hover{
 #whoinner{
     position: relative;
     background: radial-gradient(rgb(255, 133, 133),rgb(255, 90, 90));
-    width: 100%;
-    height: 600px;
+    width: 29vw;
+    height: 37vw;
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
@@ -547,8 +547,8 @@ button:hover{
     position: relative;
     background: radial-gradient(rgb(180, 143, 255),
     rgb(160, 100, 255));
-    width: 100%;
-    height: 600px;
+    width: 29vw;
+    height: 37vw;
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
@@ -559,8 +559,8 @@ button:hover{
 #whyinner{
     position: relative;
     background: radial-gradient(rgb(125, 144, 255),rgb(70, 98, 255));
-    width: 100%;
-    height: 600px;
+    width: 29vw;
+    height: 37vw;
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
@@ -569,18 +569,27 @@ button:hover{
     box-shadow:5px 10px #ffffff;
 }
 #whoback{
+    display:flex;
+    justify-content:center;
+    align-items:center;
     color:white;
     transform: rotateY(180deg);
     border-radius: 20px;
 }
 
 #aboutback{
+    display:flex;
+    justify-content:center;
+    align-items:center;
     color:white;
     transform: rotateY(180deg);
     border-radius: 20px;
 }
 
 #whyback{
+    display:flex;
+    justify-content:center;
+    align-items:center;
     color:white;
     transform: rotateY(180deg);
     border-radius: 20px;
@@ -598,6 +607,7 @@ h1.infoback{
     margin-left:20px;
     margin-right:20px;
     text-align: center;
+    font-size: 1.7vw;
 }
 #flipwho:active #whoinner{
     transform:rotateY(180deg);
@@ -679,4 +689,94 @@ h1.infoback{
     color:white;
     font-size:20px;
     margin:auto;
+}
+
+#welcome{
+    width:100%;
+    height:7vw;
+    display: flex;
+    justify-content: center;
+}
+
+#welcometext{
+    width:100%;
+    color:white;
+    font-size:50px;
+    text-align: center;
+    margin:auto;
+}
+
+#welcomebuttons{
+    width:100%;
+    display: flex;
+    height: 40vw;
+    justify-content: left;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+}
+
+#homebutton3{
+    display:none;
+}
+
+#home3{
+    position: relative;
+    margin-left: 40px;
+    margin-right:50px;
+    margin-top:0px;
+    margin-bottom:7vw;
+    width:30vw;
+    height:37vw;
+    color:black;
+    background-color:rgb(125, 144, 255);
+    border-color:#272727;
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: center;
+}
+
+#homebutton4{
+    display:none;
+}
+
+#home4{
+    position: relative;
+    margin-bottom:7vw;
+    margin-top:0px;
+    margin-left: 50px;
+    margin-right:40px;
+    width: 30vw;
+    height:37vw;
+    color:black;
+    background-color:rgb(125, 144, 255);
+    border-color:#272727;
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: center;
+}
+
+#homebutton5{
+    display:none;
+}
+#home5{
+    left: 5px;
+    top:5px;
+    min-width: 50px;
+    color:black;
+    background-image: radial-gradient(rgb(0rgb(46, 46, 46) 0),#fff);
+    border-color:#272727;
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: center;
+}
+
+.transition-fade{
+    opacity: 1;
+    transition: 0.5s;
+
+}
+
+html.is-animating .transition-fade{
+    opacity: 0;
 }

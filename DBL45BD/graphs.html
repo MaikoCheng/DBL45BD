@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DBL 45BD</title>
+    <meta name="The dbl workgroup 45" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="style.css">
+    <div id="title">
+        <h1 class="title">RELATIONS BETWEEN DIFFERENT JOB TITLES & THEIR E-MAILS</h1>
+    </div>
+    <script defer src="https://unpkg.com/swup@latest/dist/swup.min.js"></script>
+    <script defer src="swup.js"></script>
+</head>
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+    
+<!-- Load d3 legend-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+<!-- Load color palette -->
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<body class="transition-fade">
+
+<div class="nameb" id="nameb"><p id="names">Adjacency matrix describing the sentiment in emails</p></div>
+<div class="namea" id="namea"><p id="names">Arc diagram describing the emails sent between employees</p></div>
+
+<div class="graphsa" id=my_dataviz></div>
+<div id="checkbox">
+<label class="container">CEO
+  <input type="checkbox" id="CEO" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Director
+  <input type="checkbox" id="Director" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Employee
+  <input type="checkbox" id="Employee" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">In House Lawyer
+  <input type="checkbox" id="In House Lawyer" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Manager
+  <input type="checkbox" id="Manager" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Managing Director
+  <input type="checkbox" id="Managing Director" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">President
+  <input type="checkbox" id="President" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Trader
+  <input type="checkbox" id="Trader" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Unknown
+  <input type="checkbox" id="Unknown" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Vice President
+  <input type="checkbox" id="Vice President" checked="checked">
+  <span class="checkmark"></span>
+</label>
+<script src="/SCRIPTS/CEO.js"></script>
+</div>
+
+<script src="/SCRIPTS/visscript.js"></script>
+
+<div class="graphsb" id=my_dataviz2></div>
+
+
+<div id="main_text">
+        <p>
+          Each node represents an employee, and the links are emails between employees. The node size indicitates the number of emails and the diagram is sorted by job function.
+ 
+        </p>
+</div>
+<div id="main_text2">
+    <p>
+        For each employee, the sentiment of their emails to other employees is shown. Color indicitates sentiment. Any sentiment is between -1 and 1, with 0 being neutral.  
+</div>
+
+<div class="sidenav">
+    <a href="#title">Job Titles</a>
+</div>
+
+<div class="navigation"></div>
+
+<div class="buttons">
+  <div>
+  <button id="home"></button>
+  <input type="button" id="homebutton" onclick="location.href='index.html';" value="Home" />
+  </div>
+  <a href="info.html"><button id="info"></button></a>
+  <script src="/SCRIPTS/home.js"></script>
+  <input type='file' id="real-file" accept='.csv' hidden="hidden" onchange='openFile(event)'/>
+  <button id="upload"><p id="data">Upload data</p></button>
+  <script src="/SCRIPTS/upload.js"></script>
+  <button id="fullscreenclose"></button>  
+  <button id="fullscreen1"></button>
+  <script src="/SCRIPTS/full.js"></script> 
+  <button id="fullscreen2"></button>
+  <script src="/SCRIPTS/full2.js"></script>
+  <script src="/SCRIPTS/fullclose.js"></script>
+
+</div>
+</body>
+</html>
