@@ -599,7 +599,7 @@ h1.infoback{
     margin-right:20px;
     text-align: center;
 }
-#flipwho:hover #whoinner{
+#flipwho:active #whoinner{
     transform:rotateY(180deg);
 }
 
@@ -610,7 +610,7 @@ h1.infoback{
     backface-visibility: hidden;
 }
 
-#flipabout:hover #aboutinner{
+#flipabout:active #aboutinner{
     transform:rotateY(180deg);
 }
 
@@ -621,7 +621,7 @@ h1.infoback{
     backface-visibility: hidden;
 }
 
-#flipwhy:hover #whyinner{
+#flipwhy:active #whyinner{
     transform:rotateY(180deg);
 }
 
