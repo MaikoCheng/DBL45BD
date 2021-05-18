@@ -23,8 +23,8 @@
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <body>
 
-<div class="nameb" id="nameb"><p id="names">Adjacency matrix describing the sentiment in mails</p></div>
-<div class="namea" id="namea"><p id="names">Arcdiagram describing the mails sent between functions</p></div>
+<div class="nameb" id="nameb"><p id="names">Adjacency matrix describing the sentiment in emails</p></div>
+<div class="namea" id="namea"><p id="names">Arc diagram describing the mails sent between employees</p></div>
 
 <div class="graphsa" id=my_dataviz></div>
 <div id="checkbox">
@@ -78,15 +78,13 @@
 
 <div id="main_text">
         <p>
-          The nodes each represent a different employee of the company. The links are the emails that each employee has sent to another employee. The size of the nodes indicates the number of emails 
-            the employee has sent in total over the time that the dataset contains. The diagram is sorted by function in the company.
+          Each node represents an employee, and the links are emails between employees. The node size indicitates the number of emails and the diagram is sorted by job function.
  
         </p>
 </div>
 <div id="main_text2">
     <p>
-        For each employee in the company, the average sentiment of their emails to every other employee is shown. This is represented by a gradient set of colors, with a legend showing which color corresponds to which sentiment. A
-        neutral Email corresponds to a sentiment of 0, while a very positive Email has a sentiment of 1, and a very negative Email has a sentimentof -1. 
+        For each employee, the sentiment of their emails to other employees is shown. Color indicitates sentiment. Any sentiment is between -1 and 1, with 0 being neutral.  
 </div>
 
 <div class="sidenav">
