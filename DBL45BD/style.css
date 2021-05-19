@@ -597,9 +597,10 @@ button:hover{
 
 h1.infoheader{
     text-align: center;
-    margin-top: 50%;
+    margin-top: 60%;
     margin-left:5px;
     margin-right:5px;
+    font-size: 2vw;
 
 }
 h1.infoback{
@@ -773,10 +774,15 @@ h1.infoback{
 
 .transition-fade{
     opacity: 1;
-    transition: 0.5s;
+    transition: 4s;
 
 }
 
 html.is-animating .transition-fade{
     opacity: 0;
+}
+
+#flipmetext{
+    color:white;
+    font-size:1vw;
 }
