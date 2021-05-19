@@ -231,6 +231,7 @@
               .style("font-size", function(label_d){ return label_d.fromEmail === d.fromEmail ? 200 : 2 } )
               .attr("y", function(label_d){ return label_d.fromEmail === d.fromEmail ? 12 : 0 } )
               .attr("x", "-30px")
+              .style("fill", function(d){ return color(d.fromJobtitle)})
 
       
           })
