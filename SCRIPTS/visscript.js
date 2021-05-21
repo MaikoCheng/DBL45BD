@@ -30,7 +30,7 @@
       document.getElementById("namea").style.display = "block";
       document.getElementById("nameb").style.display = "block";
       d3.csv(dataURL, function( data) {
-        data = data.filter(function(d,i){ return i<1000 })
+        //data = data.filter(function(d,i){ return i<1000 })
         data = data.sort(function (a,b) {return d3.ascending(a.fromJobtitle, b.fromJobtitle);});
         tokeep.sort();
         data = data.filter(function(d,i){ return tokeep.indexOf(d.fromJobtitle) >= 0 })
