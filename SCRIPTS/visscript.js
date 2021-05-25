@@ -445,7 +445,7 @@
   
     //Create an actual svg element for the legend
     svg2.append("g")
-      .attr("transform", "translate(-200 ,50)")
+      .attr("transform", "translate(-250 ,50)")
       .call(legend)
       .selectAll("text")
           .style("font-family", "Helvetica")
