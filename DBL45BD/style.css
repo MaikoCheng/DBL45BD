@@ -786,3 +786,15 @@ html.is-animating .transition-fade{
     color:white;
     font-size:1vw;
 }
+
+#why{
+    transform:rotateX(0deg);
+}
+
+#who{
+    transform:rotateX(0deg);
+}
+
+#about{
+    transform:rotateX(0deg);
+}
