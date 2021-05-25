@@ -273,241 +273,244 @@
               .style("font-size", "150px");
 
       })
-      const nrOfIds = 149
+      
+  //ADJACENCY MATRIX
+      
+    // set the dimensions and margins of the graph
+    var margin2 = {top: 70, right: 10, bottom: 5, left: 70},
+    width2 = 1800 - margin2.left - margin2.right,
+    height2 = 1800 - margin2.top - margin2.bottom;
+    
+    // append the svg object to the body of the page
+    var svg2 = d3.select("#my_dataviz2")
+          .append("svg")
+            .attr("width", '100%')
+            .attr("height", '100%')
+            .call(d3.zoom().on("zoom", function () {
+              svg2.attr("transform", d3.event.transform)}))
+           .style("background-color", "transparent")
+          .append("g")
+            .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");  
+		
+		
+    // Build color scale
+    var colorCell = d3.scaleLinear()
+      .range(["yellow", "white", "rgb(61, 149, 179)"])
+      .domain([-0.05, 0, 0.05])
+   
+    //Read the input data
+    d3.csv(dataURL, function(data) {
+            
+    //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. 
+    //Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
+    var nestedData = d3.nest()
+        .key(d => d.fromId)
+        .key(d => d.toId)
+        .rollup(function(v) { return {
+            mails: v,
+            totalMails: v.length,
+            totalSentiment: d3.sum(v, function(d) { return d.sentiment;}),
+            avgSentiment: d3.mean(v, function(d) { return d.sentiment;})};})
+        .entries(data);
 
-      // set the dimensions and margins of the graph
-      var margin2 = {top: 35, right: 10, bottom: 5, left: 35},
-        width2 = 600 - margin2.left - margin2.right,
-        height2 = 600 - margin2.top - margin2.bottom;
-
-      // append the svg object to the body of the page
-      var svg2 = d3.select("#my_dataviz2")
-      .append("svg")
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .call(d3.zoom().on("zoom", function () {
-       svg2.attr("transform", d3.event.transform)
-        }))
-      .style("background-color", "transparent")
-      .append("g")
-        .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-
-      //Creates array with ID's
-      function range(start, end) {
-          return Array(end - start + 1).fill().map((_, idx) => start + idx)
-          }
-
-      //Array of ID's (1 to 149)
-      var Ids = range(1, nrOfIds);
-      console.log(Ids);
-
-      // Build X scales and axis:
-      var x = d3.scaleBand()
-        .range([ 0, width2+1200 ])
-        .domain(Ids)
+    //To be able to correctly add all the squares to the adjacency matrix, we have to create seperate objects for each fromId to each distinct toId. 
+    //E.g. all emails that 96 sent to 77 in one object.
+    var links = [];
+    //For each fromId we extract the list of people that they sent emails to (fromId.values).
+    nestedData.forEach(function (fromId) {
+    //Then for each toId in fromId.values we create a new object called link containing the fromId, toId and some metadata (mails, totalMails, totalSentiment and avgSentiment).
+    //We could add more information to this object, or simplify it.
+        fromId.values.forEach(function(toId) {
+            var link = {
+                fromId: fromId.key,
+                toId: toId.key,
+                fromEmail: toId.value.mails[0].fromEmail.replace(/@enron.com/g, ""),
+                toEmail: toId.value.mails[0].toEmail.replace(/@enron.com/g, ""),
+                fromJobtitle: toId.value.mails[0].fromJobtitle,
+                toJobtitle: toId.value.mails[0].toJobtitle,
+                totalMails: toId.value.totalMails,
+                totalSentiment: toId.value.totalSentiment,
+                avgSentiment: toId.value.avgSentiment
+                //,metadata: toId
+            };
+            //Add the object to the links array
+            links.push(link);
+        })
+    })
+    
+    //Create an object for each unique employee. Their id corresponds to the index in the nodes array.
+    var nodes = [];
+    data.forEach(function (n) {
+        nodes[n.toId] = {
+          id: n.toId,
+          name: n.toEmail.replace(/@enron.com/g, ""),
+          jobtitle: n.toJobtitle
+        };
+    });
+    
+    //Sort the nodes by jobtitle
+    var orderByJobtitle = nodes.sort(function(a, b){
+      	return d3.ascending(a.jobtitle, b.jobtitle)});
+      
+    //List of groups of jobtitles
+    var allGroups = data.map(function(d){return d.fromJobtitle})
+    allGroups = [...new Set(allGroups)]
+      
+    //A color scale for jobtitle groups:
+    var colorName = d3.scaleOrdinal()
+      .domain(allGroups)
+      .range(d3.schemeSet3);
+  
+    // Build X scales and axis:
+    var x = d3.scaleBand()
+        .range([ 0, width2 ]) 
+        .domain(orderByJobtitle.map(d => d['name']))
         .padding(0.01);
 
       svg2.append("g")
-        .style("stroke", "white")
         .call(d3.axisTop(x))
         .selectAll("text")
+      		.style("fill", function(d){ return colorName(d => d['jobtitle'])})
           .attr("transform", "rotate(-90)")
-          .attr("x", "14px")
+      		.attr("text-anchor", "start")
+          .attr("x", "10px")
           .attr("y", "3px");
-          
 
-      // Build Y scales and axis:
-      var y = d3.scaleBand()
-        .range([ 0, height2+1200 ])
-        .domain(Ids)
-        //.style("fill", "white")
-        .padding(0.01);
-      svg2.append("g")
-        .style("stroke", "white")
-        .call(d3.axisLeft(y));
-        
+    // Build Y scales and axis:
+    var y = d3.scaleBand()
+      .range([ 0, height2 ])
+      .domain(orderByJobtitle.map(d => d['name']))
+      .padding(0.01);
+    svg2.append("g")
+      .call(d3.axisLeft(y))
+      .selectAll("text")
+      	.style("fill", function(d){ return colorName(d => d['jobtitle'])});
       
-      svg2.selectAll("line")
+    svg2.selectAll("line")
         .style("stroke", "white");
 
+      //d3.selectAll('text').style("font-size", 5);
 
-      //From text
-      svg2.append("text")
-          .attr("class", "x label")
-          .attr("text-anchor", "end")
-          .attr("x", (width2+1200)/2)
-          .attr("y", -margin2.top/0.8)
-          .text("From")
-              .style("font-size" , 40);
-      //To text
-      svg2.append("text")
-          .attr("class", "y label")
-          .attr("text-anchor", "end")
-          .attr("y", -(margin2.left)/(0.8))
-          .attr("x", -(height2+1200)/2)
-          .attr("dy", "20px")
-          .attr("transform", "rotate(-90)")
-          .text("To")
-              .style("font-size" , 40);
-        
-     svg2.selectAll("text")
-            .style("font-family", "Helvetica")
-            .attr("fill", "white");
+    //From axis label
+    svg2.append("text")
+        .attr("class", "x label")
+        //.attr("text-anchor", "end")
+        .attr("x", width2/2)
+        .attr("y", -1.5*margin2.top)
+        .text("From")
+            .style("font-size" , 40);
+    
+    //To axis label
+    svg2.append("text")
+        .attr("class", "y label")
+        //.attr("text-anchor", "end")
+        .attr("y", -2*margin2.left)
+        .attr("x", -height2/2)
+        .attr("dy", ".75em")
+        .attr("transform", "rotate(-90)")
+        .text("To")
+            .style("font-size" , 40);
 
-        
+    //Create a legend
+    var legend = d3.legendColor()
+    .cells(7)
+    .labelFormat(d3.format(".2f"))
+    .scale(colorCell)
+    .shapeWidth(50)
+    .shapeHeight(50)
+    .on('cellover',function(d){
+      if(d<0){
+        tooltip.style("opacity", 1)
+            .html("This value means a negative average sentiment")
+            .style("left", (d3.mouse(this)[0]+70) + "px")
+            .style("top", (d3.mouse(this)[1]) + "px");
+      }
+      else if(d==0){
+        tooltip.style("opacity", 1)
+            .html("This value means a neutral average sentiment")
+            .style("left", (d3.mouse(this)[0]+70) + "px")
+            .style("top", (d3.mouse(this)[1]) + "px");
+      }
+      else{
+        tooltip.style("opacity", 1)
+            .html("This value means a positive average sentiment")
+            .style("left", (d3.mouse(this)[0]+70) + "px")
+            .style("top", (d3.mouse(this)[1]) + "px");
+      }
+    })
+    .on('cellout', function(d){
+        tooltip.style("opacity", 0)
+    }); 
+  
+    //Create an actual svg element for the legend
+    svg2.append("g")
+      .attr("transform", "translate(-200 ,50)")
+      .call(legend)
+      .selectAll("text")
+          .style("font-family", "Helvetica")
+          .attr("fill", "white");
 
-      // Build color scale
-      var myColor = d3.scaleLinear()
-          .range(["yellow", "white", "rgb(61, 149, 179)"])
-          .domain([-0.03, 0, 0.03])
+    svg2.selectAll("text")
+      .style("font-family", "Helvetica")
+      .attr("fill", "white");
 
-      //Read the data
-      d3.csv(dataURL, function(data) {
-          //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
-        var nestedData = d3.nest()
-            .key(d => d.fromId)
-            .key(d => d.toId)
-            .rollup(function(v) { return {
-                mails: v,
-                totalMails: v.length,
-                totalSentiment: d3.sum(v, function(d) { return d.sentiment;                                }),
-                avgSentiment: d3.mean(v, function(d) { return d.sentiment;})};})
-            .entries(data);
+    // create a tooltip
+    var tooltip = d3.select("#my_dataviz2")
+          .append("div")
+          .style("opacity", 0)
+          .attr("class", "tooltip")
+          .style("background-color", "white")
+          .style("border", "solid")
+          .style("border-width", "2px")
+          .style("border-radius", "5px")
+          .style("padding", "5px")
 
-        //Look at the console to get a better understanding of nestedData.
-        console.log(nestedData);
+    // Three functions that change the tooltip when user hover / move / leave a cell
+    var mouseover = function(d) {
+      if(d.avgSentiment > 0){
+        tooltip.style("opacity", 1)
+            .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromJobtitle + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were positive.")
+            .style("left", (d3.mouse(this)[0]+70) + "px")
+            .style("top", (d3.mouse(this)[1]) + "px")
+      }else if(d.avgSentiment < 0){
+        tooltip.style("opacity", 1)
+            .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromJobtitle + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were negative.")
+            .style("left", (d3.mouse(this)[0]+70) + "px")
+            .style("top", (d3.mouse(this)[1]) + "px")
+      }else if(d.avgSentiment == 0){
+        tooltip.style("opacity", 1)
+            .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromJobtitle + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were neutral.")
+            .style("left", (d3.mouse(this)[0]+70) + "px")
+            .style("top", (d3.mouse(this)[1]) + "px")
+      }
+    }
 
-        //To be able to correctly add all the squares to the adjacency matrix, we have to create seperate objects for each fromId to each distinct toId. E.g. all emails that 96 sent to 77 in one object.
-        var groupedData = [];
-        //For each fromId we extract the list of people that they sent emails to (fromId.values).
-        nestedData.forEach(function (fromId) {
-        //Then for each toId in fromId.values we create a new object called groupedMails containing the fromId, toId and some metadata (mails, totalMails, totalSentiment and avgSentiment).
-        //We could add more information to this object, or simplify it.
-            fromId.values.forEach(function(toId) {
-                var groupedMails = {
-                    fromId: fromId.key,
-                    toId: toId.key,
-                    fromEmail: toId.value.mails[0].fromEmail,
-                    toEmail: toId.value.mails[0].toEmail,
-                    metadata: toId
-                };
-                //Add the object to the groupedData array
-                groupedData.push(groupedMails);
-            })
-        })
-        //Look at the console to get a better understanding of all objects in groupedData.
-        console.log(groupedData);
-        
-        
-        
-        //Create a legend
-        var legend = d3.legendColor()
-          .cells(7)
-          .labelFormat(d3.format(".2f"))
-          .scale(myColor)
-          .shapeWidth(50)
-          .shapeHeight(50)
-          .on('cellover',function(d){
-            if(d<0){
-              tooltip.style("opacity", 1)
-                  .html("This value means a negative average sentiment")
-                  .style("left", (d3.mouse(this)[0]+70) + "px")
-                  .style("top", (d3.mouse(this)[1]) + "px");
-            }
-            else if(d==0){
-              tooltip.style("opacity", 1)
-                  .html("This value means a neutral average sentiment")
-                  .style("left", (d3.mouse(this)[0]+70) + "px")
-                  .style("top", (d3.mouse(this)[1]) + "px");
-            }
-            else{
-              tooltip.style("opacity", 1)
-                  .html("This value means a positive average sentiment")
-                  .style("left", (d3.mouse(this)[0]+70) + "px")
-                  .style("top", (d3.mouse(this)[1]) + "px");
-            }
-          })
-          .on('cellout', function(d){
-              tooltip.style("opacity", 0)
-          }); 
-        
-      //Create an actual svg el. for the legend
-      svg2.append("g")
-        .attr("transform", "translate(-200 ,50)")
-        .call(legend)
-        .selectAll("text")
-            .style("font-family", "Helvetica")
-            .attr("fill", "white");
-            
+    var mouseleave = function(d) {
+        tooltip.style("opacity", 0)
+    }
 
-      
-
-
-        // create a tooltip
-        var tooltip = d3.select("#my_dataviz2")
-            .append("div")
-            .style("opacity", 0)
-            .attr("class", "tooltip")
-            .style("background-color", "white")
-            .style("border", "solid")
-            .style("border-width", "2px")
-            .style("border-radius", "5px")
-            .style("padding", "5px")
-
-        // Three functions that change the tooltip when user hover / move / leave a cell
-        var mouseover = function(d) {
-          if(d.metadata.value.avgSentiment > 0){
-            tooltip.style("opacity", 1)
-                .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromId + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toId + ") is: " + d.metadata.value.avgSentiment+ " which means that the e-mail was positive.")
-                .style("left", (d3.mouse(this)[0]+70) + "px")
-                .style("top", (d3.mouse(this)[1]) + "px")
-          }else if(d.metadata.value.avgSentiment < 0){
-            tooltip.style("opacity", 1)
-                .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromId + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toId + ") is: " + d.metadata.value.avgSentiment+ " which means that the e-mail was negative.")
-                .style("left", (d3.mouse(this)[0]+70) + "px")
-                .style("top", (d3.mouse(this)[1]) + "px")
-          }else if(d.metadata.value.avgSentiment == 0){
-            tooltip.style("opacity", 1)
-                .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromId + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toId + ") is: " + d.metadata.value.avgSentiment+ " which means that the e-mail was neutral.")
-                .style("left", (d3.mouse(this)[0]+70) + "px")
-                .style("top", (d3.mouse(this)[1]) + "px")
-          }
-
-        }
-
-        //var mousemove = function(d) {
-            //tooltip
-            //  .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromId + ") to " + d.toEmail + " (" + d.toId + ") is: " + d.metadata.value.avgSentiment)
-            //	.style("left", (d3.mouse(this)[0]+70) + "px")
-            // 	.style("top", (d3.mouse(this)[1]) + "px")
-        //}
-
-        var mouseleave = function(d) {
-            tooltip.style("opacity", 0)
-        }
-
-        // add the squares
-        svg2.selectAll()
-            .data(groupedData)//, function(d) {return d.key + d.values.key;})
-            .enter()      
-            .append("rect")
-              //.attr("stroke", "black")
-              //.style('stroke-width', '0.5px')
-              .style('stroke-opacity', .5)
-              .attr("rx", .75)
-              .attr("ry", .75)
-              .attr("x", d => x(d.fromId))
-              .attr("y", d => y(d.toId))
-              .attr("width", x.bandwidth() )
-              .attr("height", y.bandwidth() )
-              .style("fill", function(d) { return myColor(d.metadata.value.avgSentiment)})
-            .on("mouseover", mouseover)
-            //.on("mousemove", mousemove)
-            .on("mouseleave", mouseleave)
+    // add the squares
+    svg2.selectAll()
+        .data(links)
+        .enter()      
+        .append("rect")
+          .attr("stroke", "black")
+          .style('stroke-width', '0.5px')
+          .style('stroke-opacity', .5)
+          .attr("rx", .75)
+          .attr("ry", .75)
+          .attr("x", d => x(d.fromEmail))
+          .attr("y", d => y(d.toEmail))
+          .attr("width", x.bandwidth() )
+          .attr("height", y.bandwidth() )
+          .style("fill", function(d) { return colorCell(d.avgSentiment)})
+        .on("mouseover", mouseover)
+        //.on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
       })
     };
     reader.readAsDataURL(input.files[0]);
   };
-
+      
 
   
