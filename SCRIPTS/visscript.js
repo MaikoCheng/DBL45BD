@@ -170,7 +170,7 @@
         // Add the links
         var links = svg
           .selectAll('mylinks')
-          //.data(data)
+          .data(data)
           .enter()
           .append('path')
           .attr('d', function (d) {
@@ -331,7 +331,6 @@
                 totalMails: toId.value.totalMails,
                 totalSentiment: toId.value.totalSentiment,
                 avgSentiment: toId.value.avgSentiment
-                //,metadata: toId
             };
             //Add the object to the links array
             links.push(link);
@@ -371,6 +370,7 @@
         .call(d3.axisTop(x))
         .selectAll("text")
       	  .style("fill", function(d){ return colorName(d => d['jobtitle'])})
+	  .style("font-size", 20)
           .attr("transform", "rotate(-90)")
       	  .attr("text-anchor", "start")
           .attr("x", "10px")
@@ -384,12 +384,13 @@
     svg2.append("g")
       .call(d3.axisLeft(y))
       .selectAll("text")
-      	.style("fill", function(d){ return colorName(d => d['jobtitle'])});
+      	.style("fill", function(d){ return colorName(d => d['jobtitle'])})
+	.style("font-size", 20);
       
     svg2.selectAll("line")
         .style("stroke", "white");
 
-      d3.selectAll('text').style("font-size", 20);
+      //d3.selectAll('text').style("font-size", 20);
 
     //From axis label
     svg2.append("text")
