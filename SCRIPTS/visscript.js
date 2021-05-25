@@ -389,7 +389,7 @@
     svg2.selectAll("line")
         .style("stroke", "white");
 
-      d3.selectAll('text').style("font-size", 8);
+      d3.selectAll('text').style("font-size", 20);
 
     //From axis label
     svg2.append("text")
