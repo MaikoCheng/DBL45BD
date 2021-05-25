@@ -170,7 +170,7 @@
         // Add the links
         var links = svg
           .selectAll('mylinks')
-          .data(data)
+          //.data(data)
           .enter()
           .append('path')
           .attr('d', function (d) {
