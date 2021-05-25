@@ -370,7 +370,7 @@
         .call(d3.axisTop(x))
         .selectAll("text")
       	  .style("fill", function(d){ return colorName(d => d['jobtitle'])})
-	  .style("font-size", 20)
+	  .style("font-size", 15)
           .attr("transform", "rotate(-90)")
       	  .attr("text-anchor", "start")
           .attr("x", "10px")
@@ -385,7 +385,7 @@
       .call(d3.axisLeft(y))
       .selectAll("text")
       	.style("fill", function(d){ return colorName(d => d['jobtitle'])})
-	.style("font-size", 20);
+	.style("font-size", 15);
       
     svg2.selectAll("line")
         .style("stroke", "white");
