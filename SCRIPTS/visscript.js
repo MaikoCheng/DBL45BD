@@ -369,7 +369,7 @@
       svg2.append("g")
         .call(d3.axisTop(x))
         .selectAll("text")
-      	  .style("fill", function(d){ return color(d => d['jobtitle'])})
+      	  .style("fill", function(d){ return colorName(d => d['jobtitle'])})
 	  .style("font-size", 13)
           .attr("transform", "rotate(-90)")
       	  .attr("text-anchor", "start")
@@ -384,7 +384,7 @@
     svg2.append("g")
       .call(d3.axisLeft(y))
       .selectAll("text")
-      	.style("fill", function(d){ return color(d => d['jobtitle'])})
+      	.style("fill", function(d){ return colorName(d => d['jobtitle'])})
 	.style("font-size", 13);
       
     svg2.selectAll("line")
