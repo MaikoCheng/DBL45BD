@@ -306,11 +306,11 @@
               .attr("r", 50)
               .style("fill", function(d){ return color(d)})
               .attr("position", "fixed")
-            .on('mouseout', function(d){
-              nodes.style("opacity", .2)
-              d3.select(this)
-                .style("opacity",1)
-            })
+            //.on('mouseout', function(d){
+            //  nodes.style("opacity", .2)
+            //  d3.select(this)
+            //    .style("opacity",1)
+            //})
           
           //Labels in legend
           svg.selectAll("labels")
