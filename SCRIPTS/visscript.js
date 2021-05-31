@@ -197,7 +197,7 @@
       
         // A color scale for groups:
         var color = d3.scaleOrdinal()
-          .domain(allJobtitles)
+          .domain(tokeep)
           .range(d3.schemeSet3);
       
         // A linear scale for node size
@@ -404,6 +404,14 @@
     //Sort the nodes by jobtitle
     var orderByJobtitle = nodes.sort(function(a, b){
       	return d3.ascending(a.jobtitle, b.jobtitle)});
+	    
+    var getTitle = function (a){
+      for(i = 0; i < orderByJobtitle.length-1; i++){
+        if (a == orderByJobtitle[i].name){
+          return orderByJobtitle[i].jobtitle;
+        }
+      }
+    }
       
     //List of groups of jobtitles
     var allGroups = data.map(function(d){return d.fromJobtitle})
@@ -411,7 +419,7 @@
       
     //A color scale for jobtitle groups:
     var colorName = d3.scaleOrdinal()
-      .domain(allGroups)
+      .domain(tokeep)
       .range(d3.schemeSet3);
   
     // Build X scales and axis:
@@ -423,7 +431,7 @@
       svg2.append("g")
         .call(d3.axisTop(x))
         .selectAll("text")
-      	  .style("fill", function(d){ return colorName(d => d['jobtitle'])})
+      	  .style("fill", function(d){ return colorName(getTitle(d))})
 	  .style("font-size", 13)
           .attr("transform", "rotate(-90)")
       	  .attr("text-anchor", "start")
@@ -438,7 +446,7 @@
     svg2.append("g")
       .call(d3.axisLeft(y))
       .selectAll("text")
-      	.style("fill", function(d){ return colorName(d => d['jobtitle'])})
+      	.style("fill", function(d){ return colorName(getTitle(d))})
 	.style("font-size", 13);
       
     svg2.selectAll("line")
