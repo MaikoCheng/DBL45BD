@@ -1,5 +1,6 @@
+//ARC DIAGRAM
 
-  // set the dimensions and margins of the graph
+// set the dimensions and margins of the graph
   var margin = {top: 100, right: 50, bottom: 160, left: 50},
     width = 1800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
@@ -16,10 +17,8 @@
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
   
-  // Read dummy data
 
   // Input data
-
     var openFile = function(event) {
     var input = event.target;
     let tokeep = ["Employee", "Vice President", "Manager", "Unknown","President","Trader","CEO","Managing Director","Director","In House Lawyer"];
@@ -29,11 +28,13 @@
       document.getElementById("checkbox").style.display = "block";
       document.getElementById("namea").style.display = "block";
       document.getElementById("nameb").style.display = "block";
-      d3.csv(dataURL, function( data) {
+
+      //Read the input data
+      d3.csv(dataURL, function(data) {
         //data = data.filter(function(d,i){ return i<1000 })
-        data = data.sort(function (a,b) {return d3.ascending(a.fromJobtitle, b.fromJobtitle);});
+        //data = data.sort(function (a,b) {return d3.ascending(a.fromJobtitle, b.fromJobtitle);});
         tokeep.sort();
-        data = data.filter(function(d,i){ return tokeep.indexOf(d.fromJobtitle) >= 0 })
+        //data = data.filter(function(d,i){ return tokeep.indexOf(d.fromJobtitle) >= 0 })
         const ceobutton = document.getElementById("CEO");
         ceobutton.addEventListener("click", function(){
         if (!ceobutton.checked){
@@ -134,48 +135,91 @@
             tokeep.sort();
         });
 
+
+      //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. 
+      //Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
+        var nestedData = d3.nest()
+        .key(d => d.fromId)
+        .key(d => d.toId)
+        .rollup(function(v) { return {
+            mails: v,
+            totalMails: v.length,
+            totalSentiment: d3.sum(v, function(d) { return d.sentiment;}),
+            avgSentiment: d3.mean(v, function(d) { return d.sentiment;})};})
+        .entries(data);
+
+    //To be able to correctly add all the squares to the adjacency matrix, we have to create seperate objects for each fromId to each distinct toId. 
+    //E.g. all emails that 96 sent to 77 in one object.
+    var linksArray = [];
+    //For each fromId we extract the list of people that they sent emails to (fromId.values).
+    nestedData.forEach(function (fromId) {
+    //Then for each toId in fromId.values we create a new object called link containing the fromId, toId and some metadata (mails, totalMails, totalSentiment and avgSentiment).
+    //We could add more information to this object, or simplify it.
+        fromId.values.forEach(function(toId) {
+            var link = {
+                fromId: fromId.key,
+                toId: toId.key,
+                fromEmail: toId.value.mails[0].fromEmail.replace(/@enron.com/g, ""),
+                toEmail: toId.value.mails[0].toEmail.replace(/@enron.com/g, ""),
+                fromJobtitle: toId.value.mails[0].fromJobtitle,
+                toJobtitle: toId.value.mails[0].toJobtitle,
+                totalMails: toId.value.totalMails,
+                totalSentiment: toId.value.totalSentiment,
+                avgSentiment: toId.value.avgSentiment
+            };
+            //Add the object to the links array
+            linksArray.push(link);
+        })
+    })
+    //console.log(linksArray);
+
+    //Create an object for each unique employee. Their id corresponds to the index in the nodes array.
+    var nodesArray = [];
+    data.forEach(function (n) {
+        nodesArray[n.toId] = {
+          id: n.toId,
+          name: n.toEmail.replace(/@enron.com/g, ""),
+          jobtitle: n.toJobtitle
+        };
+    });
+    //console.log(nodesArray)
+
+      //Sort the nodes by jobtitle
+      var orderByJobtitle = nodesArray.sort(function(a, b){
+      return d3.ascending(a.jobtitle, b.jobtitle)});
+
         // List of node names
-        var allNodes = data.map(function(d){return d.fromEmail.replace(/@enron.com/g, "")})
-      
+        var allNames = nodesArray.map(function(d){return d.name})
+
         // List of groups
-        var allGroups = data.map(function(d){return d.fromJobtitle})
-        allGroups = [...new Set(allGroups)]
+        var allJobtitles = nodesArray.map(function(d){return d.jobtitle})
+        allJobtitles = [...new Set(allJobtitles)]
       
         // A color scale for groups:
         var color = d3.scaleOrdinal()
-          .domain(allGroups)
+          .domain(allJobtitles)
           .range(d3.schemeSet3);
       
         // A linear scale for node size
         var size = d3.scaleLinear()
-          .domain([1,10])
-          .range([2,10]);
+          .domain([1,149])
+          .range([20,200]);
       
         // A linear scale to position the nodes on the X axis
         var x = d3.scalePoint()
           .range([0, width + 5000])
-          .domain(allNodes)
-      
-        // In my input data, links are provided between nodes -id-, NOT between node names.
-        // So I have to do a link between this id and the name
-        var idToNode = {};
-        data.forEach(function (n) {
-          idToNode[n.fromId] = n;
-        });
-        var idToNode2 = {};
-        data.forEach(function (n) {
-          idToNode2[n.toId] = n;
-        });
-        console.log(idToNode)
+          .domain(allNames)
+
         // Add the links
         var links = svg
           .selectAll('mylinks')
-          .data(data)
+          .data(linksArray)
           .enter()
           .append('path')
           .attr('d', function (d) {
-            start = x(idToNode[d.fromId].fromEmail.replace(/@enron.com/g, ""))    // X position of start node on the X axis
-            let end = x(idToNode2[d.toId].toEmail.replace(/@enron.com/g, ""))      // X position of end node
+            start = x(d.toEmail)    // X position of start node on the X axis
+            let end = x(d.fromEmail)      // X position of end node
+            
             return ['M', start, height-30,    // the arc starts at the coordinate x=start, y=height-30 (where the starting node is)
               'A',                            // This means we're gonna build an elliptical arc
               (start - end)/2, ',',    // Next 2 lines are the coordinates of the inflexion point. Height of this point is proportional with start - end distance
@@ -186,71 +230,79 @@
           .style("fill", "none")
           .attr("stroke", "grey")
           .style("stroke-width", 1)
-      
+
         // Add the circle for the nodes
         var nodes = svg
           .selectAll("mynodes")
-          .data(data.sort(function(a,b) { return +b.fromId - +a.fromId }))
+          .data(orderByJobtitle)
           .enter()
           .append("circle")
-            .attr("cx", function(d){ return(x(d.fromEmail.replace(/@enron.com/g, "").replace(/@enron.com/g, "")))})
+            .attr("cx", function(d){if (d != undefined){ return(x(d.name))} else {return -1000}})
             .attr("cy", height-30)
-            .attr("r", function(d){ return(size(d.fromId)/3)})
-            .style("fill", function(d){ return color(d.fromJobtitle)})
+            .attr("r", function(d){if (d != undefined){ return 50} else {return 0}})
+            .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)} else {return "transparent"}})
             .attr("stroke", "white")
             .style("opacity", 1)
       
-        // And give them a label
+        // Add name labels to the nodes
         var labels = svg
           .selectAll("mylabels")
-          .data(data)
+          .data(orderByJobtitle)
           .enter()
           .append("text")
-            .attr("x", "0px")
-            .attr("y", 0)
-            .text(function(d){ return(d.fromEmail.replace(/@enron.com/g, ""))} )
+            .attr("x", "-20px")
+            .attr("y", 40)
+            .text(function(d){if (d != undefined){ return(d.name)}})
             .style("text-anchor", "end")
-            .attr("transform", function(d){ return( "translate(" + (x(d.fromEmail.replace(/@enron.com/g, ""))) + "," + (height-15) + ")rotate(-45)")})
+            .attr("transform", function(d){if (d != undefined){ return( "translate(" + x(d.name) + "," + (height-15) + ")rotate(-45)")}})
             .style("font-size", 50)
-            .style("fill","white")
+            .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)}});
       
+        
         // Add the highlighting functionality
         nodes
           .on('mouseover', function (d) {
-            // Highlight the nodes: every node is green except of him
+            // Highlight the node: all nodes but the selected node get a lower opacity
             nodes
                 .style('opacity', "2%")
               d3.select(this)
                 .style('opacity', 1)
-            // Highlight the connections
-            links
-              .style('stroke', function (link_d) { return link_d.fromEmail === d.fromEmail || link_d.toEmail === d.fromEmail ? color(d.fromJobtitle) : '#b8b8b8';})
-              .style('stroke-opacity', function (link_d) { return link_d.fromEmail === d.fromEmail || link_d.toEmail === d.fromEmail ? 5 : .2;})
-              .style('stroke-width', function (link_d) { return link_d.fromEmail === d.fromEmail || link_d.toEmail === d.fromEmail ? 4 : 1;})
-            labels
-              .style("font-size", function(label_d){ return label_d.fromEmail === d.fromEmail ? 200 : 2 } )
-              .attr("y", function(label_d){ return label_d.fromEmail === d.fromEmail ? 12 : 0 } )
-              .attr("x", "-30px")
-              .style("fill", function(d){ return color(d.fromJobtitle)})
+                .attr('r', 60)
 
-      
+            // Highlight the links
+            links
+              .style('stroke', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? color(d.jobtitle) : '#b8b8b8';}})
+              .style('stroke-opacity', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? 5 : .2;}})
+              .style('stroke-width', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? 4 : 1;}})
+
+            //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
+            labels
+              .style("font-size", function(label_d){ return label_d.name === d.name ? 200 : 20 } )
+              .attr("y", function(label_d){if (d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
+              .attr("x", "-30px")
+              .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)}})
           })
+
+          //All nodes back to normal when no node is selected
           .on('mouseout', function (d) {
-            nodes.style('opacity', 1)
+            nodes
+              .style('opacity', 1)
+              .attr('r', 40)
             links
               .style('stroke', 'grey')
               .style('stroke-opacity', .8)
               .style('stroke-width', '1')
             labels
               .style("font-size", 50 )
-      
           })
+          
+          //nodes in the legend
           svg.selectAll("nodes")
             .data(tokeep)
             .enter()
             .append('circle')
               .attr("cx",-1230)
-              .attr("cy", function(d,i){ return -1100 + i*150}) // 100 is where the first dot appears. 25 is the distance between dots
+              .attr("cy", function(d,i){ return -1100 + i*150})
               .attr("r", 50)
               .style("fill", function(d){ return color(d)})
               .attr("position", "fixed")
@@ -259,13 +311,14 @@
               d3.select(this)
                 .style("opacity",1)
             })
-              
+          
+          //Labels in legend
           svg.selectAll("labels")
             .data(tokeep)
             .enter()
             .append("text")
               .attr("x", -1160)
-              .attr("y", function(d,i){ return -1080 + i*150}) // 100 is where the first dot appears. 25 is the distance between dots
+              .attr("y", function(d,i){ return -1080 + i*150})
               .style("fill", function(d){ return color(d)})
               .text(function(d){ return d})
               .attr("text-anchor", "left")
@@ -273,6 +326,7 @@
               .style("font-size", "150px");
 
       })
+  
       
   //ADJACENCY MATRIX
       
