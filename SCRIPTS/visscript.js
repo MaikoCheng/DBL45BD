@@ -277,7 +277,7 @@
 
             //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
             labels
-              .style("font-size", function(label_d){ return label_d.name === d.name ? 200 : 20 } )
+              .style("font-size", function(label_d){if (d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
               .attr("y", function(label_d){if (d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
               .attr("x", "-30px")
               .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)}})
