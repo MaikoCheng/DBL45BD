@@ -798,3 +798,43 @@ html.is-animating .transition-fade{
 #about{
     transform:rotateX(0deg);
 }
+
+#CEO{
+    color: #8dd3c7;
+}
+
+#Director{
+    color: #ffffb3;   
+}
+
+#Employee{
+    color: #bebada;
+}
+
+#In House Lawyer{
+    color: #fb8072;
+}
+
+#Manager{
+    color: #80b1d3;
+}
+
+#Managing Director{
+    color: #fdb462;
+}
+
+#President{
+    color: #b3de69;
+}
+
+#Trader{
+    color:#fccde5;
+}
+
+#Unknown{
+    color:#d9d9d9;
+}
+
+#Vice President{
+    color: #bc80bd;
+}
