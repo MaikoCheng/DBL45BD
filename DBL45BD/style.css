@@ -799,42 +799,42 @@ html.is-animating .transition-fade{
     transform:rotateX(0deg);
 }
 
-#CEO{
+#CEOspan{
     color: #8dd3c7;
 }
 
-#Director{
+#Directorspan{
     color: #ffffb3;   
 }
 
-#Employee{
+#Employeespan{
     color: #bebada;
 }
 
-#In House Lawyer{
+#In House Lawyerspan{
     color: #fb8072;
 }
 
-#Manager{
+#Managerspan{
     color: #80b1d3;
 }
 
-#Managing Director{
+#Managing Directorspan{
     color: #fdb462;
 }
 
-#President{
+#Presidentspan{
     color: #b3de69;
 }
 
-#Trader{
+#Traderspan{
     color:#fccde5;
 }
 
-#Unknown{
+#Unknownspan{
     color:#d9d9d9;
 }
 
-#Vice President{
+#Vice Presidentspan{
     color: #bc80bd;
 }
