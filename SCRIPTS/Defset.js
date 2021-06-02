@@ -146,7 +146,7 @@ var svg = d3.select("#my_dataviz")
 
 // Input data
 
-{var dataURL = "/DBL45BD-main/DBL45BD/enron-v1.csv";
+{var dataURL = "/DBL45BD/DBL45BD/enron-v1.csv";
 document.getElementById("checkbox").style.display = "block";
 document.getElementById("namea").style.display = "block";
 document.getElementById("nameb").style.display = "block";
