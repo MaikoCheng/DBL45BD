@@ -31,10 +31,7 @@
 
       //Read the input data
       d3.csv(dataURL, function(data) {
-        //data = data.filter(function(d,i){ return i<1000 })
-        //data = data.sort(function (a,b) {return d3.ascending(a.fromJobtitle, b.fromJobtitle);});
         tokeep.sort();
-        //data = data.filter(function(d,i){ return tokeep.indexOf(d.fromJobtitle) >= 0 })
         const ceobutton = document.getElementById("CEO");
         ceobutton.addEventListener("click", function(){
         if (!ceobutton.checked){
@@ -324,8 +321,6 @@
               .attr("text-anchor", "left")
               .style("alignment-baseline", "middle")
               .style("font-size", "150px");
-
-      })
   
       
   //ADJACENCY MATRIX
@@ -351,55 +346,6 @@
     var colorCell = d3.scaleLinear()
       .range(["yellow", "white", "rgb(61, 149, 179)"])
       .domain([-0.05, 0, 0.05])
-   
-    //Read the input data
-    d3.csv(dataURL, function(data) {
-            
-    //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. 
-    //Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
-    var nestedData = d3.nest()
-        .key(d => d.fromId)
-        .key(d => d.toId)
-        .rollup(function(v) { return {
-            mails: v,
-            totalMails: v.length,
-            totalSentiment: d3.sum(v, function(d) { return d.sentiment;}),
-            avgSentiment: d3.mean(v, function(d) { return d.sentiment;})};})
-        .entries(data);
-
-    //To be able to correctly add all the squares to the adjacency matrix, we have to create seperate objects for each fromId to each distinct toId. 
-    //E.g. all emails that 96 sent to 77 in one object.
-    var links = [];
-    //For each fromId we extract the list of people that they sent emails to (fromId.values).
-    nestedData.forEach(function (fromId) {
-    //Then for each toId in fromId.values we create a new object called link containing the fromId, toId and some metadata (mails, totalMails, totalSentiment and avgSentiment).
-    //We could add more information to this object, or simplify it.
-        fromId.values.forEach(function(toId) {
-            var link = {
-                fromId: fromId.key,
-                toId: toId.key,
-                fromEmail: toId.value.mails[0].fromEmail.replace(/@enron.com/g, ""),
-                toEmail: toId.value.mails[0].toEmail.replace(/@enron.com/g, ""),
-                fromJobtitle: toId.value.mails[0].fromJobtitle,
-                toJobtitle: toId.value.mails[0].toJobtitle,
-                totalMails: toId.value.totalMails,
-                totalSentiment: toId.value.totalSentiment,
-                avgSentiment: toId.value.avgSentiment
-            };
-            //Add the object to the links array
-            links.push(link);
-        })
-    })
-    
-    //Create an object for each unique employee. Their id corresponds to the index in the nodes array.
-    var nodes = [];
-    data.forEach(function (n) {
-        nodes[n.toId] = {
-          id: n.toId,
-          name: n.toEmail.replace(/@enron.com/g, ""),
-          jobtitle: n.toJobtitle
-        };
-    });
     
     //Sort the nodes by jobtitle
     var orderByJobtitle = nodes.sort(function(a, b){
@@ -554,7 +500,7 @@
 
     // add the squares
     svg2.selectAll()
-        .data(links)
+        .data(linksArray)
         .enter()      
         .append("rect")
           .attr("stroke", "black")
