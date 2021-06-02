@@ -431,6 +431,7 @@ button:hover{
     margin-bottom: 12px;
     cursor: pointer;
     font-size: 22px;
+    font-weight: 700;
     color: #fff;
     -webkit-user-select: none;
     -moz-user-select: none;
