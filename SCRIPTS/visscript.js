@@ -250,7 +250,7 @@
           .data(orderByJobtitle)
           .enter()
           .append("text")
-            .attr("x", "-20px")
+            .attr("x", "-80px")
             .attr("y", 40)
             .text(function(d){if (d != undefined){ return(d.name)}})
             .style("text-anchor", "end")
