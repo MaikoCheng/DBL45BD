@@ -346,10 +346,6 @@
     var colorCell = d3.scaleLinear()
       .range(["yellow", "white", "rgb(61, 149, 179)"])
       .domain([-0.05, 0, 0.05])
-    
-    //Sort the nodes by jobtitle
-    var orderByJobtitle = nodes.sort(function(a, b){
-      	return d3.ascending(a.jobtitle, b.jobtitle)});
 	    
     var getTitle = function (a){
       for(i = 0; i < orderByJobtitle.length-1; i++){
