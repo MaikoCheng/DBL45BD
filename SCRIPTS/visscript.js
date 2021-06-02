@@ -241,7 +241,7 @@
             .attr("cy", height-50)
             .attr("r", function(d){if (d != undefined){ return 50} else {return 0}})
             .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)} else {return "transparent"}})
-            .attr("stroke", function(d){if d != undefined){ return "white"} else {return "transparent"}})
+            .attr("stroke", function(d){if (d != undefined){ return "white"} else {return "transparent"}})
             .style("opacity", 1)
 							  
         // Add name labels to the nodes
