@@ -387,17 +387,17 @@
     var mouseover = function(d) {
       if(d.avgSentiment > 0){
         tooltip.style("opacity", 1)
-            .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromJobtitle + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were positive.")
+            .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromJobtitle + ") to " + d.toEmail + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were positive.")
             .style("left", (d3.mouse(this)[0]+70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px")
       }else if(d.avgSentiment < 0){
         tooltip.style("opacity", 1)
-            .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromJobtitle + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were negative.")
+            .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromJobtitle + ") to " + d.toEmail + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were negative.")
             .style("left", (d3.mouse(this)[0]+70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px")
       }else if(d.avgSentiment == 0){
         tooltip.style("opacity", 1)
-            .html("The average sentiment of the e-mails<br>from " + d.fromEmail.replace(/@enron.com/g, "") + " (" + d.fromJobtitle + ") to " + d.toEmail.replace(/@enron.com/g, "") + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were neutral.")
+            .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromJobtitle + ") to " + d.toEmail + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were neutral.")
             .style("left", (d3.mouse(this)[0]+70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px")
       }
