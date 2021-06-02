@@ -499,6 +499,10 @@
         .data(linksArray)
         .enter()      
         .append("rect")
+	  .attr("class", "selectable")
+	  .attr("data-Name", function(d){
+            return d.fromEmail;
+          })
           .attr("stroke", "black")
           .style('stroke-width', '0.5px')
           .style('stroke-opacity', .5)
@@ -512,6 +516,31 @@
         .on("mouseover", mouseover)
         //.on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
+	      
+      
+        //create an array with the actual svg elements of the matrix
+	var selectableElements = Array.from(document.querySelectorAll(".selectable"));
+           //console.log(selectableElements)
+	
+        svg2.call( d3.brush()                     // Add the brush feature using the d3.brush function
+              .extent([[0,0],[120000000000000,123123123122] ])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+              .on("start brush", doOnBrush)
+        )
+	      
+	function doOnBrush(){
+          extent = d3.event.selection;    
+          var x1 = extent[0][0];
+          var x2 = extent[1][0];
+          var y1 = extent[0][1];
+          var y2 = extent[1][1];
+          selectableElements.forEach(function(d){ 
+            if(x1<=d.getAttribute("x")&&d.getAttribute("x")<=x2&&y1<=d.getAttribute("y")&&d.getAttribute("y")<=y2){
+              console.log(d.getAttribute("data-Name"))
+            }
+          })
+        }
+
+	
       })
     };
     reader.readAsDataURL(input.files[0]);
