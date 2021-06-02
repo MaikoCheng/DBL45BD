@@ -251,7 +251,7 @@
           .enter()
           .append("text")
             .attr("x", "-80px")
-            .attr("y", 40)
+            .attr("y", 75)
             .text(function(d){if (d != undefined){ return(d.name)}})
             .style("text-anchor", "end")
             .attr("transform", function(d){if (d != undefined){ return( "translate(" + x(d.name) + "," + (height-15) + ")rotate(-45)")}})
