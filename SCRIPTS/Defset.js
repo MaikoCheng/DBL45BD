@@ -146,7 +146,7 @@ var svg = d3.select("#my_dataviz")
 
 // Input data
 
-{var dataURL = "/DBL45BD/DBL45BD/enron-v1.csv";
+var dataURL = "/DBL45BD/DBL45BD/enron-v1.csv";
 document.getElementById("checkbox").style.display = "block";
 document.getElementById("namea").style.display = "block";
 document.getElementById("nameb").style.display = "block";
@@ -288,11 +288,11 @@ var labels = svg
 nodes
     .on('mouseover', function (d) {
     // Highlight the node: all nodes but the selected node get a lower opacity
-    nodes
-        .style('opacity', "2%")
+      nodes
+          .style('opacity', "2%")
         d3.select(this)
-        .style('opacity', 1)
-        .attr('r', 60)
+          .style('opacity', 1)
+          .attr('r', 60)
 
     // Highlight the links
     links
@@ -557,7 +557,4 @@ svg2.selectAll()
 //.on("mousemove", mousemove)
 .on("mouseleave", mouseleave)
 });
-
-
-}
 })
