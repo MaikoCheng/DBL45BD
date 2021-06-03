@@ -413,6 +413,13 @@
         .enter()      
         .append("rect")
           .attr("stroke", "black")
+	  .attr("class", "selectable")
+          .attr("data-From", function(d){
+	      return d.fromEmail;
+	  })
+          .attr("data-To", function(d){
+	      return d.toEmail;
+          })
           .style('stroke-width', '0.5px')
           .style('stroke-opacity', .5)
           .attr("rx", .75)
@@ -425,6 +432,60 @@
         .on("mouseover", mouseover)
         //.on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
+	      
+	var brushedFrom = [] 
+        var brushedTo = []
+	       //create an array with the actual svg elements of the matrix
+        var selectableElements = Array.from(document.querySelectorAll(".selectable"));
+              //console.log(selectableElements)
+
+	    svg2.call( d3.brush()                     // Add the brush feature using the d3.brush function
+		  .extent([[0,0],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+		  .on("start brush", doOnBrush)
+  	   )
+	      
+        function doOnBrush(){
+     	    extent = d3.event.selection;  
+    	    brushedFrom = [] 
+       	    brushedTo = []  
+      	    var x1 = extent[0][0];
+            var x2 = extent[1][0];
+            var y1 = extent[0][1];
+            var y2 = extent[1][1];
+            selectableElements.forEach(function(d){ 
+                 if(x1<=d.getAttribute("x")&&d.getAttribute("x")<=x2&&y1<=d.getAttribute("y")&&d.getAttribute("y")<=y2){
+                     brushedFrom.push(d.getAttribute("data-From"))
+                     brushedTo.push(d.getAttribute("data-To"))
+                 }
+            })
+	      links
+		.style('stroke', function (link){ 
+		  if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
+		     return color(link.fromJobtitle)
+		}})
+		.style('stroke-opacity', function (link){ 
+		  if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
+		     return 5
+		}})
+		.style('stroke-width', function (link){ 
+		  if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
+		     return 4
+		}})
+
+		nodes
+		.style('r', function (node){ 
+		  if(brushedFrom.includes(node.name) || brushedTo.includes(node.name)){
+		     return 60
+		}})
+		.style('opacity', function (node){ 
+		  if(!(brushedFrom.includes(node.name) && brushedTo.includes(node.name))){
+		     return "2%"
+		}})
+		// .style('stroke-width', function (link){ 
+		//   if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
+		//      return 4
+		// }})
+	    }      
       })
     };
     reader.readAsDataURL(input.files[0]);
