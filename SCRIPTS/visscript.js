@@ -160,7 +160,7 @@
           .data(orderByJobtitle)
           .enter()
           .append("text")
-            .attr("x", "-80px")
+            .attr("x", "-100px")
             .attr("y", 75)
             .text(function(d){if (d != undefined){ return(d.name)}})
             .style("text-anchor", "end")
@@ -174,7 +174,7 @@
           .on('mouseover', function (d) {
             // Highlight the node: all nodes but the selected node get a lower opacity
             nodes
-                .style('opacity', "2%")
+                .style('opacity', "5%")
               d3.select(this)
                 .style('opacity', 1)
                 .attr('r', 60)
@@ -189,7 +189,7 @@
             labels
               .style("font-size", function(label_d){if (d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
               .attr("y", function(label_d){if (d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
-              .attr("x", "-30px")
+              .attr("x", "-180px")
               .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)}})
           })
 
