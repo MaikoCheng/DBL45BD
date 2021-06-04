@@ -846,13 +846,14 @@ html.is-animating .transition-fade{
 
 #defset{
     left: 24%;
-    min-width: 50px;
-    max-width: 100px;
+    width: 200px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 2%;
+    font-size: 20px;
+    text-align: center;
     color: white;
     background-image:  url(28842.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
 #defset:hover{
