@@ -256,7 +256,9 @@ var links = svg
     .attr("stroke", "grey")
     .style("stroke-width", 1)
 
-// Add the circle for the nodes
+// Add the circle for the 
+
+
 var nodes = svg
     .selectAll("mynodes")
     .data(orderByJobtitle)
@@ -376,17 +378,6 @@ var svg2 = d3.select("#my_dataviz2")
 var colorCell = d3.scaleLinear()
 .range(["yellow", "white", "rgb(61, 149, 179)"])
 .domain([-0.05, 0, 0.05])
-
-//Create an object for each unique employee. Their id corresponds to the index in the nodes array.
-var nodes = [];
-data.forEach(function (n) {
-nodes[n.toId] = {
-    id: n.toId,
-    name: n.toEmail.replace(/@enron.com/g, ""),
-    jobtitle: n.toJobtitle
-};
-});
-
 
 var getTitle = function (a){
 for(i = 0; i < orderByJobtitle.length-1; i++){
