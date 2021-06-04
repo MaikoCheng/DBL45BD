@@ -1,6 +1,4 @@
-//ARC DIAGRAM
 
-// set the dimensions and margins of the graph
   
   
 
@@ -13,7 +11,11 @@
     let tokeep = ["Employee", "Vice President", "Manager", "Unknown","President","Trader","CEO","Managing Director","Director","In House Lawyer"];
     var reader = new FileReader();
     reader.onload = function(){
-      var margin = {top: 100, right: 50, bottom: 160, left: 50},
+
+  //ARC DIAGRAM
+
+    // set the dimensions and margins of the graph
+    var margin = {top: 100, right: 50, bottom: 160, left: 50},
     width = 1800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
   
@@ -40,11 +42,7 @@
 
       //Read the input data
       d3.csv(dataURL, function(data) {
-        //data = data.filter(function(d,i){ return i<1000 })
-        //data = data.sort(function (a,b) {return d3.ascending(a.fromJobtitle, b.fromJobtitle);});
         tokeep.sort();
-        //data = data.filter(function(d,i){ return tokeep.indexOf(d.fromJobtitle) >= 0 })
-      
 
       //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. 
       //Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
@@ -115,6 +113,8 @@
           .domain([1,149])
           .range([20,200]);
       
+
+
         // A linear scale to position the nodes on the X axis
         var x = d3.scalePoint()
           .range([0, width + 5000])
@@ -149,7 +149,7 @@
           .append("circle")
             .attr("cx", function(d){if (d != undefined){ return(x(d.name))} else {return -10000}})
             .attr("cy", height+10)
-            .attr("r", function(d){if (d != undefined){ return 50} else {return 0}})
+            .style("r", function(d){if (d != undefined){ return 50} else {return 0}})
             .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)} else {return "transparent"}})
             .attr("stroke", function(d){if (d != undefined){ return "white"} else {return "transparent"}})
             .style("opacity", 1)
@@ -177,7 +177,7 @@
                 .style('opacity', "5%")
               d3.select(this)
                 .style('opacity', 1)
-                .attr('r', 60)
+                .style('r', 60)
 
             // Highlight the links
             links
@@ -187,25 +187,27 @@
 
             //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
             labels
-              .style("font-size", function(label_d){if (d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
-              .attr("y", function(label_d){if (d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
+              .style("font-size", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
+              .attr("y", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
               .attr("x", "-180px")
-              .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)}})
+              .style("fill", function(label_d){if (label_d != undefined){ return color(label_d.jobtitle)}})
           })
 
           //All nodes back to normal when no node is selected
-          .on('mouseout', function (d) {
+          .on('mouseout', mouseout)
+          
+          function mouseout() {
             nodes
               .style('opacity', 1)
-              .attr('r', 40)
+              .style('r', 40)
             links
               .style('stroke', 'grey')
               .style('stroke-opacity', .8)
               .style('stroke-width', '1')
             labels
               .style("font-size", 50 )
-          })
-          
+          }
+
           //nodes in the legend
           svg.selectAll("nodes")
             .data(tokeep)
@@ -430,66 +432,71 @@
           .attr("height", y.bandwidth() )
           .style("fill", function(d) { return colorCell(d.avgSentiment)})
         .on("mouseover", mouseover)
-        //.on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
 	      
-	var brushedFrom = [] 
-        var brushedTo = []
-	       //create an array with the actual svg elements of the matrix
-        var selectableElements = Array.from(document.querySelectorAll(".selectable"));
-              //console.log(selectableElements)
+      //create an array with the actual svg elements of the matrix
+      var selectableElements = Array.from(document.querySelectorAll(".selectable"));
 
-	    svg3.call( d3.brush()                     // Add the brush feature using the d3.brush function
-		  .extent([[0,0],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-		  .on("start brush", doOnBrush)
-  	   )
+      svg3.append("g")
+          .attr("class", "brush")
+          .call( d3.brush()                     // Add the brush feature using the d3.brush function
+		        .extent([[-20,-20],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+		        .on("brush", doOnBrush)
+            .on("start", mouseout));
 	      
-        function doOnBrush(){
-     	    extent = d3.event.selection;  
-    	    brushedFrom = [] 
-       	    brushedTo = []  
-      	    var x1 = extent[0][0];
-            var x2 = extent[1][0];
-            var y1 = extent[0][1];
-            var y2 = extent[1][1];
-            selectableElements.forEach(function(d){ 
-                 if(x1<=d.getAttribute("x")&&d.getAttribute("x")<=x2&&y1<=d.getAttribute("y")&&d.getAttribute("y")<=y2){
-                     brushedFrom.push(d.getAttribute("data-From"))
-                     brushedTo.push(d.getAttribute("data-To"))
-                 }
-            })
-	      links
-		.style('stroke', function (link){ 
-		  if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
-		     return color(link.fromJobtitle)
-		}})
-		.style('stroke-opacity', function (link){ 
-		  if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
-		     return 5
-		}})
-		.style('stroke-width', function (link){ 
-		  if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
-		     return 4
-		}})
+      function doOnBrush(){
+        extent = d3.event.selection;  
+        var brushedFrom = [] 
+        var brushedTo = []  
+        var x1 = extent[0][0];
+        var x2 = extent[1][0];
+        var y1 = extent[0][1];
+        var y2 = extent[1][1];
+        selectableElements.forEach(function(d){ 
+              if(x1<=d.getAttribute("x")&&d.getAttribute("x")<=x2&&y1<=d.getAttribute("y")&&d.getAttribute("y")<=y2){
+                  brushedFrom.push(d.getAttribute("data-From"))
+                  brushedTo.push(d.getAttribute("data-To"))
+              }
+          })
+        links
+          .style('stroke', function (link){ 
+            if (brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
+              return color(link.fromJobtitle)
+          }})
+          .style('stroke-opacity', function (link){ 
+            if (brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
+              return 5
+          } else {
+            return 0.05
+          }})
+          .style('stroke-width', function (link){ 
+            if (brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
+              return 4
+          }})
 
-		nodes
-		.style('r', function (node){ 
-		  if(brushedFrom.includes(node.name) || brushedTo.includes(node.name)){
-		     return 60
-		}})
-		.style('opacity', function (node){ 
-		  if(!(brushedFrom.includes(node.name) && brushedTo.includes(node.name))){
-		     return "2%"
-		}})
-		// .style('stroke-width', function (link){ 
-		//   if(brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
-		//      return 4
-		// }})
-	    }      
-      })
-    };
-    reader.readAsDataURL(input.files[0]);
+        nodes
+          .style('r', function (node){ 
+            if (node != undefined && (brushedFrom.includes(node.name) || brushedTo.includes(node.name))) {
+              return 60;
+            }})
+          .style('opacity', function (node){ 
+            if (node != undefined && (brushedFrom.includes(node.name) || brushedTo.includes(node.name))){
+              return 1
+            }})
+
+        labels
+          .style("font-size", function(label){
+            if (label != undefined && (brushedFrom.includes(label.name) || brushedTo.includes(label.name))){ 
+              return 50 
+            }})
+          //.attr("y", function(label){if (d != undefined){ return label.name === d.name ? 12 : 0 }} )
+          //.attr("x", "-180px")
+          //.style("fill", function(label){if (d != undefined){ return color(d.jobtitle)}})  
+      }  
+    })
   };
+  reader.readAsDataURL(input.files[0]);
+};
       
 
   
