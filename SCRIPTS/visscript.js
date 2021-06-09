@@ -89,19 +89,30 @@
           name: n.toEmail.replace(/@enron.com/g, ""),
           jobtitle: n.toJobtitle
         };
+        nodesArray[n.fromId] = {
+            id: n.fromId,
+            name: n.fromEmail.replace(/@enron.com/g, ""),
+            jobtitle: n.fromJobtitle
+        };
     });
-    //console.log(nodesArray)
+    
+    var filtNodesByJobtitle = [];
+    nodesArray.forEach(function(node) {
+      if (tokeep.includes(node.jobtitle)) {
+        filtNodesByJobtitle.push(node);
+      }
+    });
 
       //Sort the nodes by jobtitle
-      var orderByJobtitle = nodesArray.sort(function(a, b){
+      var orderByJobtitle = filtNodesByJobtitle.sort(function(a, b){
       return d3.ascending(a.jobtitle, b.jobtitle)});
 
         // List of node names
-        var allNames = nodesArray.map(function(d){return d.name})
+        var allNames = filtNodesByJobtitle.map(function(d){return d.name})
 
         // List of groups
-        var allJobtitles = nodesArray.map(function(d){return d.jobtitle})
-        allJobtitles = [...new Set(allJobtitles)]
+        // var allJobtitles = nodesArray.map(function(d){return d.jobtitle})
+        // allJobtitles = [...new Set(allJobtitles)]
       
         // A color scale for groups:
         var color = d3.scaleOrdinal()
@@ -113,7 +124,6 @@
           .domain([1,149])
           .range([20,200]);
       
-
 
         // A linear scale to position the nodes on the X axis
         var x = d3.scalePoint()
@@ -188,49 +198,51 @@
             //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
             labels
               .style("font-size", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
-              .attr("y", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
-              .attr("x", "-180px")
-              .style("fill", function(label_d){if (label_d != undefined){ return color(label_d.jobtitle)}})
+
+            cells
+              .style("opacity", function(cell){return cell.fromEmail === d.name || cell.toEmail === d.name ? 1 : 0.05})
           })
 
           //All nodes back to normal when no node is selected
           .on('mouseout', mouseout)
-          
-          function mouseout() {
-            nodes
-              .style('opacity', 1)
-              .style('r', 40)
-            links
-              .style('stroke', 'grey')
-              .style('stroke-opacity', .8)
-              .style('stroke-width', '1')
-            labels
-              .style("font-size", 50 )
-          }
 
-          //nodes in the legend
-          svg.selectAll("nodes")
-            .data(tokeep)
-            .enter()
-            .append('circle')
-              .attr("cx",-1230)
-              .attr("cy", function(d,i){ return -1100 + i*150})
-              .attr("r", 50)
-              .style("fill", function(d){ return color(d)})
-              .attr("position", "fixed")
-          
-          //Labels in legend
-          svg.selectAll("labels")
-            .data(tokeep)
-            .enter()
-            .append("text")
-              .attr("x", -1160)
-              .attr("y", function(d,i){ return -1080 + i*150})
-              .style("fill", function(d){ return color(d)})
-              .text(function(d){ return d})
-              .attr("text-anchor", "left")
-              .style("alignment-baseline", "middle")
-              .style("font-size", "150px");
+        function mouseout() {
+          nodes
+            .style('opacity', 1)
+            .style('r', 40)
+          links
+            .style('stroke', 'grey')
+            .style('stroke-opacity', .8)
+            .style('stroke-width', '1')
+          labels
+            .style("font-size", 50 )
+          cells
+            .style("opacity", 1)
+        }
+
+        //nodes in the legend
+        svg.selectAll("nodes")
+          .data(tokeep)
+          .enter()
+          .append('circle')
+            .attr("cx",-1230)
+            .attr("cy", function(d,i){ return -1100 + i*150})
+            .attr("r", 50)
+            .style("fill", function(d){ return color(d)})
+            .attr("position", "fixed")
+        
+        //Labels in legend
+        svg.selectAll("labels")
+          .data(tokeep)
+          .enter()
+          .append("text")
+            .attr("x", -1160)
+            .attr("y", function(d,i){ return -1080 + i*150})
+            .style("fill", function(d){ return color(d)})
+            .text(function(d){ return d})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
+            .style("font-size", "150px");
 
       
   
@@ -287,7 +299,7 @@
         .call(d3.axisTop(x))
         .selectAll("text")
       	  .style("fill", function(d){ return colorName(getTitle(d))})
-	  .style("font-size", 13)
+	        .style("font-size", 13)
           .attr("transform", "rotate(-90)")
       	  .attr("text-anchor", "start")
           .attr("x", "10px")
@@ -302,7 +314,7 @@
       .call(d3.axisLeft(y))
       .selectAll("text")
       	.style("fill", function(d){ return colorName(getTitle(d))})
-	.style("font-size", 13);
+	      .style("font-size", 13);
       
     svg3.selectAll("line")
         .style("stroke", "white");
@@ -409,19 +421,26 @@
         tooltip.style("opacity", 0)
     }
 
+    svg3.append("g")
+    .attr("class", "brush")
+    .call( d3.brush()                     // Add the brush feature using the d3.brush function
+      .extent([[-20,-20],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("brush", doOnBrush)
+      .on("start", mouseout));
+
     // add the squares
-    svg3.selectAll()
+    var cells = svg3.selectAll()
         .data(linksArray)
         .enter()      
         .append("rect")
           .attr("stroke", "black")
-	  .attr("class", "selectable")
+	        .attr("class", "selectable")
           .attr("data-From", function(d){
-	      return d.fromEmail;
-	  })
+	            return d.fromEmail;
+	          })
           .attr("data-To", function(d){
-	      return d.toEmail;
-          })
+	            return d.toEmail;
+            })
           .style('stroke-width', '0.5px')
           .style('stroke-opacity', .5)
           .attr("rx", .75)
@@ -431,18 +450,14 @@
           .attr("width", x.bandwidth() )
           .attr("height", y.bandwidth() )
           .style("fill", function(d) { return colorCell(d.avgSentiment)})
-        .on("mouseover", mouseover)
-        .on("mouseleave", mouseleave)
-	      
+          .attr("pointer-events", "all")
+          .on("mouseover", mouseover)
+          .on("mouseleave", mouseleave)
+          
       //create an array with the actual svg elements of the matrix
       var selectableElements = Array.from(document.querySelectorAll(".selectable"));
 
-      svg3.append("g")
-          .attr("class", "brush")
-          .call( d3.brush()                     // Add the brush feature using the d3.brush function
-		        .extent([[-20,-20],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-		        .on("brush", doOnBrush)
-            .on("start", mouseout));
+
 	      
       function doOnBrush(){
         extent = d3.event.selection;  

@@ -1,127 +1,19 @@
 let tokeep = ["Employee", "Vice President", "Manager", "Unknown","President","Trader","CEO","Managing Director","Director","In House Lawyer"];
-const ceobutton = document.getElementById("CEO");
-ceobutton.addEventListener("click", function(){
-if (!ceobutton.checked){
-  tokeep.splice(tokeep.indexOf("CEO"), 1)
-}else{
-  tokeep.push("CEO");
-}
-  tokeep.sort();
-  document.getElementById("defset").click();
-});
-const vpbutton = document.getElementById("Vice President");
-vpbutton.addEventListener("click", function(){
-    if (!vpbutton.checked){
-        tokeep.splice(tokeep.indexOf("Vice President"), 1)
-    }else{
-        tokeep.push("Vice President");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-const empbutton = document.getElementById("Employee");
-empbutton.addEventListener("click", function(){
-    if (!empbutton.checked){
-        tokeep.splice(tokeep.indexOf("Employee"), 1)
-    }else{
-        tokeep.push("Employee");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
 
-const manbutton = document.getElementById("Manager");
-manbutton.addEventListener("click", function(){
-    if (!manbutton.checked){
-        tokeep.splice(tokeep.indexOf("Manager"), 1)
-    }else{
-        tokeep.push("Manager");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-
-const unkbutton = document.getElementById("Unknown");
-unkbutton.addEventListener("click", function(){
-    if (!unkbutton.checked){
-        tokeep.splice(tokeep.indexOf("Unknown"), 1)
-    }else{
-        tokeep.push("Unknown");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-
-const prebutton = document.getElementById("President");
-prebutton.addEventListener("click", function(){
-    if (!prebutton.checked){
-        tokeep.splice(tokeep.indexOf("President"), 1)
-    }else{
-        tokeep.push("President");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-
-const trabutton = document.getElementById("Trader");
-trabutton.addEventListener("click", function(){
-    if (!trabutton.checked){
-        tokeep.splice(tokeep.indexOf("Trader"), 1)
-    }else{
-        tokeep.push("Trader");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-
-const madbutton = document.getElementById("Managing Director");
-madbutton.addEventListener("click", function(){
-    if (madbutton.checked == false){
-        tokeep.splice(tokeep.indexOf("Managing Director"), 1)
-    }else{
-        tokeep.push("Managing Director");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-
-const dirbutton = document.getElementById("Director");
-dirbutton.addEventListener("click", function(){
-    if (dirbutton.checked == false){
-        tokeep.splice(tokeep.indexOf("Director"), 1)
-    }else{
-        tokeep.push("Director");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-
-const ihlbutton = document.getElementById("In House Lawyer");
-ihlbutton.addEventListener("click", function(){
-    if (ihlbutton.checked == false){
-        tokeep.splice(tokeep.indexOf("In House Lawyer"), 1)
-    }else{
-        tokeep.push("In House Lawyer");
-    }
-    tokeep.sort();
-    document.getElementById("defset").click();
-});
-
-
-
+//console.log(tokeep)
 var defbutton = document.getElementById("defset");
 defbutton.addEventListener("click", function(){
 if(document.getElementById("svgid") != null){
     document.getElementById("svgid").remove();
-    document.getElementById("svg2id").remove();
     d3.select("svg2").remove();
-    document.getElementById("tooltipdefid").remove();
     console.log("sheesh")
 }
 if(document.getElementById("svg3id") != null){
     document.getElementById("svg3id").remove();
     document.getElementById("tooltip").remove();
-    document.getElementById("svg4id").remove();
+}
+if(document.getElementById("svg4id") != null){
+  document.getElementById("svg4id").remove();
 }
 //ARC DIAGRAM
 
@@ -154,7 +46,7 @@ document.getElementById("nameb").style.display = "block";
  //Read the input data
  d3.csv(dataURL, function(data) {
     tokeep.sort();
-
+    
   //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. 
   //Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
     var nestedData = d3.nest()
@@ -175,6 +67,7 @@ nestedData.forEach(function (fromId) {
 //Then for each toId in fromId.values we create a new object called link containing the fromId, toId and some metadata (mails, totalMails, totalSentiment and avgSentiment).
 //We could add more information to this object, or simplify it.
     fromId.values.forEach(function(toId) {
+      if (tokeep.includes(toId.value.mails[0].fromJobtitle) && tokeep.includes(toId.value.mails[0].toJobtitle)) {
         var link = {
             fromId: fromId.key,
             toId: toId.key,
@@ -188,9 +81,10 @@ nestedData.forEach(function (fromId) {
         };
         //Add the object to the links array
         linksArray.push(link);
+      }
     })
 })
-//console.log(linksArray);
+console.log(nestedData);
 
 //Create an object for each unique employee. Their id corresponds to the index in the nodes array.
 var nodesArray = [];
@@ -200,19 +94,32 @@ data.forEach(function (n) {
       name: n.toEmail.replace(/@enron.com/g, ""),
       jobtitle: n.toJobtitle
     };
+    nodesArray[n.fromId] = {
+        id: n.fromId,
+        name: n.fromEmail.replace(/@enron.com/g, ""),
+        jobtitle: n.fromJobtitle
+    };
 });
-//console.log(nodesArray)
+
+var filtNodesByJobtitle = [];
+    nodesArray.forEach(function(node) {
+      if (tokeep.includes(node.jobtitle)) {
+        filtNodesByJobtitle.push(node);
+      }
+    });
+    console.log(filtNodesByJobtitle)
 
   //Sort the nodes by jobtitle
-  var orderByJobtitle = nodesArray.sort(function(a, b){
+  var orderByJobtitle = filtNodesByJobtitle.sort(function(a, b){
   return d3.ascending(a.jobtitle, b.jobtitle)});
+  console.log(orderByJobtitle)
 
     // List of node names
-    var allNames = nodesArray.map(function(d){return d.name})
+    var allNames = filtNodesByJobtitle.map(function(d){return d.name})
 
     // List of groups
-    var allJobtitles = nodesArray.map(function(d){return d.jobtitle})
-    allJobtitles = [...new Set(allJobtitles)]
+    // var allJobtitles = nodesArray.map(function(d){return d.jobtitle})
+    // allJobtitles = [...new Set(allJobtitles)]
   
     // A color scale for groups:
     var color = d3.scaleOrdinal()
@@ -224,7 +131,6 @@ data.forEach(function (n) {
       .domain([1,149])
       .range([20,200]);
   
-
 
     // A linear scale to position the nodes on the X axis
     var x = d3.scalePoint()
@@ -299,9 +205,9 @@ data.forEach(function (n) {
         //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
         labels
           .style("font-size", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
-          .attr("y", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
-          .attr("x", "-180px")
-          .style("fill", function(label_d){if (label_d != undefined){ return color(label_d.jobtitle)}})
+
+        cells
+            .style("opacity", function(cell){return cell.fromEmail === d.name || cell.toEmail === d.name ? 1 : 0.05})
       })
 
       //All nodes back to normal when no node is selected
@@ -317,6 +223,8 @@ data.forEach(function (n) {
           .style('stroke-width', '1')
         labels
           .style("font-size", 50 )
+        cells
+            .style("opacity", 1)
       }
 
       //nodes in the legend
@@ -372,11 +280,14 @@ var colorCell = d3.scaleLinear()
   .domain([-0.05, 0, 0.05])
     
 var getTitle = function (a){
-  for(i = 0; i < orderByJobtitle.length-1; i++){
-    if (a == orderByJobtitle[i].name){
-      return orderByJobtitle[i].jobtitle;
-    }
-  }
+if(a != undefined){
+    for(i = 0; i < orderByJobtitle.length-1; i++){
+        if (a == orderByJobtitle[i].name){
+          return orderByJobtitle[i].jobtitle;
+        }
+      }
+} else return undefined;
+  
 }
   
 //List of groups of jobtitles
@@ -398,11 +309,11 @@ var x = d3.scaleBand()
     .call(d3.axisTop(x))
     .selectAll("text")
         .style("fill", function(d){ return colorName(getTitle(d))})
-  .style("font-size", 13)
-      .attr("transform", "rotate(-90)")
+        .style("font-size", 13)
+        .attr("transform", "rotate(-90)")
         .attr("text-anchor", "start")
-      .attr("x", "10px")
-      .attr("y", "3px");
+        .attr("x", "10px")
+        .attr("y", "3px");
 
 // Build Y scales and axis:
 var y = d3.scaleBand()
@@ -412,8 +323,8 @@ var y = d3.scaleBand()
 svg3.append("g")
   .call(d3.axisLeft(y))
   .selectAll("text")
-      .style("fill", function(d){ return colorName(getTitle(d))})
-.style("font-size", 13);
+    .style("fill", function(d){ return colorName(getTitle(d))})
+    .style("font-size", 13);
   
 svg3.selectAll("line")
     .style("stroke", "white");
@@ -520,40 +431,43 @@ var mouseleave = function(d) {
     tooltip.style("opacity", 0)
 }
 
+
+
+svg3.append("g")
+    .attr("class", "brush")
+    .call( d3.brush()                     // Add the brush feature using the d3.brush function    
+      .extent([[-20,-20],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("brush", doOnBrush)
+      .on("start", mouseout))
+
 // add the squares
-svg3.selectAll()
+var cells = svg3.selectAll()
     .data(linksArray)
     .enter()      
     .append("rect")
-      .attr("stroke", "black")
-  .attr("class", "selectable")
-      .attr("data-From", function(d){
-      return d.fromEmail;
-  })
-      .attr("data-To", function(d){
-      return d.toEmail;
-      })
-      .style('stroke-width', '0.5px')
-      .style('stroke-opacity', .5)
-      .attr("rx", .75)
-      .attr("ry", .75)
-      .attr("x", d => x(d.fromEmail))
-      .attr("y", d => y(d.toEmail))
-      .attr("width", x.bandwidth() )
-      .attr("height", y.bandwidth() )
-      .style("fill", function(d) { return colorCell(d.avgSentiment)})
-    .on("mouseover", mouseover)
-    .on("mouseleave", mouseleave)
+        .attr("stroke", "black")
+        .attr("class", "selectable")
+        .attr("data-From", function(d){
+        return d.fromEmail;
+        })
+        .attr("data-To", function(d){
+        return d.toEmail;
+        })
+        .style('stroke-width', '0.5px')
+        .style('stroke-opacity', .5)
+        .attr("rx", .75)
+        .attr("ry", .75)
+        .attr("x", d => x(d.fromEmail))
+        .attr("y", d => y(d.toEmail))
+        .attr("width", x.bandwidth() )
+        .attr("height", y.bandwidth() )
+        .style("fill", function(d) { return colorCell(d.avgSentiment)})
+        .attr("pointer-events", "all")
+        .on("mouseover", mouseover)
+        .on("mouseleave", mouseleave)
       
   //create an array with the actual svg elements of the matrix
-  var selectableElements = Array.from(document.querySelectorAll(".selectable"));
-
-  svg3.append("g")
-      .attr("class", "brush")
-      .call( d3.brush()                     // Add the brush feature using the d3.brush function
-            .extent([[-20,-20],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-            .on("brush", doOnBrush)
-        .on("start", mouseout));
+    var selectableElements = Array.from(document.querySelectorAll(".selectable"));
       
   function doOnBrush(){
     extent = d3.event.selection;  
@@ -606,3 +520,121 @@ svg3.selectAll()
     }      
   });
 })
+
+const ceobutton = document.getElementById("CEO");
+ceobutton.addEventListener("click", function(){
+if (!ceobutton.checked){
+  tokeep.splice(tokeep.indexOf("CEO"), 1)
+}else{
+  tokeep.push("CEO");
+}
+  tokeep.sort();
+  console.log(tokeep);
+  document.getElementById("defset").click();
+});
+const vpbutton = document.getElementById("Vice President");
+vpbutton.addEventListener("click", function(){
+    if (!vpbutton.checked){
+        tokeep.splice(tokeep.indexOf("Vice President"), 1)
+    }else{
+        tokeep.push("Vice President");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+const empbutton = document.getElementById("Employee");
+empbutton.addEventListener("click", function(){
+    if (!empbutton.checked){
+        tokeep.splice(tokeep.indexOf("Employee"), 1)
+    }else{
+        tokeep.push("Employee");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+
+const manbutton = document.getElementById("Manager");
+manbutton.addEventListener("click", function(){
+    if (!manbutton.checked){
+        tokeep.splice(tokeep.indexOf("Manager"), 1)
+    }else{
+        tokeep.push("Manager");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+
+const unkbutton = document.getElementById("Unknown");
+unkbutton.addEventListener("click", function(){
+    if (!unkbutton.checked){
+        tokeep.splice(tokeep.indexOf("Unknown"), 1)
+    }else{
+        tokeep.push("Unknown");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+
+const prebutton = document.getElementById("President");
+prebutton.addEventListener("click", function(){
+    if (!prebutton.checked){
+        tokeep.splice(tokeep.indexOf("President"), 1)
+    }else{
+        tokeep.push("President");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+
+const trabutton = document.getElementById("Trader");
+trabutton.addEventListener("click", function(){
+    if (!trabutton.checked){
+        tokeep.splice(tokeep.indexOf("Trader"), 1)
+    }else{
+        tokeep.push("Trader");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+
+const madbutton = document.getElementById("Managing Director");
+madbutton.addEventListener("click", function(){
+    if (madbutton.checked == false){
+        tokeep.splice(tokeep.indexOf("Managing Director"), 1)
+    }else{
+        tokeep.push("Managing Director");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+
+const dirbutton = document.getElementById("Director");
+dirbutton.addEventListener("click", function(){
+    if (dirbutton.checked == false){
+        tokeep.splice(tokeep.indexOf("Director"), 1)
+    }else{
+        tokeep.push("Director");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
+
+const ihlbutton = document.getElementById("In House Lawyer");
+ihlbutton.addEventListener("click", function(){
+    if (ihlbutton.checked == false){
+        tokeep.splice(tokeep.indexOf("In House Lawyer"), 1)
+    }else{
+        tokeep.push("In House Lawyer");
+    }
+    tokeep.sort();
+    console.log(tokeep);
+    document.getElementById("defset").click();
+});
