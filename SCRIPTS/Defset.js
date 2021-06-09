@@ -146,15 +146,23 @@ var svg = d3.select("#my_dataviz")
 
 // Input data
 
-var dataURL = "/DBL45BD/DBL45BD/enron-v1.csv";
+var dataURL = "../DBL45BD/enron-v1.csv";
 document.getElementById("checkbox").style.display = "block";
 document.getElementById("namea").style.display = "block";
 document.getElementById("nameb").style.display = "block";
 
  //Read the input data
  d3.csv(dataURL, function(data) {
+    data.forEach(function(d){
+        if(!(tokeep.includes(d.toJobtitle))){
+          tokeep.push(d.toJobtitle)
+        }
+        else if(!(tokeep.includes(d.fromJobtitle))){
+          tokeep.push(d.fromJobtitle)
+        }
+      })
     tokeep.sort();
-
+    
   //Group the data. nestedData is an array with everyone (fromId's) who sent at least 1 email containing the list of people that the person sent the email(s) to. 
   //Each recipient itself (toId's) is a list with all emails received from that specific fromId, totalMails, totalSentiment and avgSentiment.
     var nestedData = d3.nest()
@@ -200,7 +208,13 @@ data.forEach(function (n) {
       name: n.toEmail.replace(/@enron.com/g, ""),
       jobtitle: n.toJobtitle
     };
+    nodesArray[n.fromId] = {
+        id: n.fromId,
+        name: n.fromEmail.replace(/@enron.com/g, ""),
+        jobtitle: n.fromJobtitle
+    };
 });
+//console.log(data)
 //console.log(nodesArray)
 
   //Sort the nodes by jobtitle
@@ -224,7 +238,6 @@ data.forEach(function (n) {
       .domain([1,149])
       .range([20,200]);
   
-
 
     // A linear scale to position the nodes on the X axis
     var x = d3.scalePoint()
@@ -299,9 +312,9 @@ data.forEach(function (n) {
         //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
         labels
           .style("font-size", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
-          .attr("y", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 12 : 0 }} )
-          .attr("x", "-180px")
-          .style("fill", function(label_d){if (label_d != undefined){ return color(label_d.jobtitle)}})
+
+        cells
+            .style("opacity", function(cell){return cell.fromEmail === d.name || cell.toEmail === d.name ? 1 : 0.05})
       })
 
       //All nodes back to normal when no node is selected
@@ -317,6 +330,8 @@ data.forEach(function (n) {
           .style('stroke-width', '1')
         labels
           .style("font-size", 50 )
+        cells
+            .style("opacity", 1)
       }
 
       //nodes in the legend
@@ -372,11 +387,14 @@ var colorCell = d3.scaleLinear()
   .domain([-0.05, 0, 0.05])
     
 var getTitle = function (a){
-  for(i = 0; i < orderByJobtitle.length-1; i++){
-    if (a == orderByJobtitle[i].name){
-      return orderByJobtitle[i].jobtitle;
-    }
-  }
+if(a != undefined){
+    for(i = 0; i < orderByJobtitle.length-1; i++){
+        if (a == orderByJobtitle[i].name){
+          return orderByJobtitle[i].jobtitle;
+        }
+      }
+} else return undefined;
+  
 }
   
 //List of groups of jobtitles
@@ -398,11 +416,11 @@ var x = d3.scaleBand()
     .call(d3.axisTop(x))
     .selectAll("text")
         .style("fill", function(d){ return colorName(getTitle(d))})
-  .style("font-size", 13)
-      .attr("transform", "rotate(-90)")
+        .style("font-size", 13)
+        .attr("transform", "rotate(-90)")
         .attr("text-anchor", "start")
-      .attr("x", "10px")
-      .attr("y", "3px");
+        .attr("x", "10px")
+        .attr("y", "3px");
 
 // Build Y scales and axis:
 var y = d3.scaleBand()
@@ -412,8 +430,8 @@ var y = d3.scaleBand()
 svg3.append("g")
   .call(d3.axisLeft(y))
   .selectAll("text")
-      .style("fill", function(d){ return colorName(getTitle(d))})
-.style("font-size", 13);
+    .style("fill", function(d){ return colorName(getTitle(d))})
+    .style("font-size", 13);
   
 svg3.selectAll("line")
     .style("stroke", "white");
@@ -520,40 +538,43 @@ var mouseleave = function(d) {
     tooltip.style("opacity", 0)
 }
 
+
+
+svg3.append("g")
+    .attr("class", "brush")
+    .call( d3.brush()                     // Add the brush feature using the d3.brush function    
+      .extent([[-20,-20],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("brush", doOnBrush)
+      .on("start", mouseout))
+
 // add the squares
 svg3.selectAll()
     .data(linksArray)
     .enter()      
     .append("rect")
-      .attr("stroke", "black")
-  .attr("class", "selectable")
-      .attr("data-From", function(d){
-      return d.fromEmail;
-  })
-      .attr("data-To", function(d){
-      return d.toEmail;
-      })
-      .style('stroke-width', '0.5px')
-      .style('stroke-opacity', .5)
-      .attr("rx", .75)
-      .attr("ry", .75)
-      .attr("x", d => x(d.fromEmail))
-      .attr("y", d => y(d.toEmail))
-      .attr("width", x.bandwidth() )
-      .attr("height", y.bandwidth() )
-      .style("fill", function(d) { return colorCell(d.avgSentiment)})
-    .on("mouseover", mouseover)
-    .on("mouseleave", mouseleave)
+        .attr("stroke", "black")
+        .attr("class", "selectable")
+        .attr("data-From", function(d){
+        return d.fromEmail;
+        })
+        .attr("data-To", function(d){
+        return d.toEmail;
+        })
+        .style('stroke-width', '0.5px')
+        .style('stroke-opacity', .5)
+        .attr("rx", .75)
+        .attr("ry", .75)
+        .attr("x", d => x(d.fromEmail))
+        .attr("y", d => y(d.toEmail))
+        .attr("width", x.bandwidth() )
+        .attr("height", y.bandwidth() )
+        .style("fill", function(d) { return colorCell(d.avgSentiment)})
+        .attr("pointer-events", "all")
+        .on("mouseover", mouseover)
+        .on("mouseleave", mouseleave)
       
   //create an array with the actual svg elements of the matrix
-  var selectableElements = Array.from(document.querySelectorAll(".selectable"));
-
-  svg3.append("g")
-      .attr("class", "brush")
-      .call( d3.brush()                     // Add the brush feature using the d3.brush function
-            .extent([[-20,-20],[width2, width2]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-            .on("brush", doOnBrush)
-        .on("start", mouseout));
+    var selectableElements = Array.from(document.querySelectorAll(".selectable"));
       
   function doOnBrush(){
     extent = d3.event.selection;  
