@@ -540,7 +540,6 @@ button:hover{
     transition: transform 0.6s;
     transform-style: preserve-3d;
     border-radius: 20px;
-    cursor: none;
     box-shadow:5px 10px #ffffff;
 
 }
@@ -554,7 +553,6 @@ button:hover{
     transition: transform 0.6s;
     transform-style: preserve-3d;
     border-radius: 20px;
-    cursor: none;
     box-shadow:5px 10px #ffffff;
 }
 #whyinner{
@@ -566,7 +564,6 @@ button:hover{
     transition: transform 0.6s;
     transform-style: preserve-3d;
     border-radius: 20px;
-    cursor: none;
     box-shadow:5px 10px #ffffff;
 }
 #whoback{
