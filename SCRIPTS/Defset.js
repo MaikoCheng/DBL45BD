@@ -548,7 +548,7 @@ svg3.append("g")
       .on("start", mouseout))
 
 // add the squares
-svg3.selectAll()
+var cells = svg3.selectAll()
     .data(linksArray)
     .enter()      
     .append("rect")
