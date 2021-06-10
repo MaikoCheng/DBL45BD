@@ -1,7 +1,7 @@
 const buttonful1 = document.getElementById("fullscreen1");
 buttonful1.addEventListener("click", function(){
   document.getElementById("my_dataviz").style.width = "100%";
-  document.getElementById("my_dataviz").style.height = "100%";
+  document.getElementById("my_dataviz").style.height = "150%";
   document.getElementById("my_dataviz").style.zIndex = 999;
   document.getElementById("fullscreenclose").style.display = "block";
   document.getElementById("fullscreenclose").style.zIndex = 1000;
