@@ -768,46 +768,6 @@ html.is-animating .transition-fade{
     transform:rotateX(0deg);
 }
 
-#CEOspan{
-    color: #8dd3c7;
-}
-
-#Directorspan{
-    color: #ffffb3;   
-}
-
-#Employeespan{
-    color: #bebada;
-}
-
-#InHouseLawyerspan{
-    color: #fb8072;
-}
-
-#Managerspan{
-    color: #80b1d3;
-}
-
-#ManagingDirectorspan{
-    color: #fdb462;
-}
-
-#Presidentspan{
-    color: #b3de69;
-}
-
-#Traderspan{
-    color:#fccde5;
-}
-
-#Unknownspan{
-    color:#d9d9d9;
-}
-
-#VicePresidentspan{
-    color: #bc80bd;
-}
-
 .tooltip{
     z-index: 1000;
 }
@@ -871,3 +831,45 @@ html.is-animating .transition-fade{
     margin-top: 1vh;
     margin-left:41.8%;
 }
+
+
+/*#CEOspan{
+    color: #8dd3c7;
+}
+
+#Directorspan{
+    color: #ffffb3;   
+}
+
+#Employeespan{
+    color: #bebada;
+}
+
+#InHouseLawyerspan{
+    color: #fb8072;
+}
+
+#Managerspan{
+    color: #80b1d3;
+}
+
+#ManagingDirectorspan{
+    color: #fdb462;
+}
+
+#Presidentspan{
+    color: #b3de69;
+}
+
+#Traderspan{
+    color:#fccde5;
+}
+
+#Unknownspan{
+    color:#d9d9d9;
+}
+
+#VicePresidentspan{
+    color: #bc80bd;
+}
+*/
