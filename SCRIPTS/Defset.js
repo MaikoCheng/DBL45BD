@@ -395,13 +395,13 @@ svg3.selectAll("text")
   .attr("fill", "white");
 
 // create a tooltip
-var tooltip = d3.select("#my_dataviz2")
+var tooltip = d3.select("#ttipm")
       .append("div")
       .style("visibility", "hidden")
       .attr("id","tooltip")
       .attr("class", "tooltip")
       .style("z-index", 1000)
-      .style("background-color", "black")
+      .style("background-color", "white")
       .style("border", "solid")
       .style("border-width", "2px")
       .style("border-radius", "5px")
