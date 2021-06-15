@@ -668,7 +668,7 @@ h1.infoback{
     height:7vw;
     display: flex;
     justify-content: center;
-    background: url(dbl-photo.png);
+    background: url(dbl_photo.png);
     background-repeat: no-repeat;
     background-position:center;
     background-size: contain;
@@ -818,7 +818,7 @@ html.is-animating .transition-fade{
 
 .buttonsbar{
     justify-content: left;
-    width:100%;
+    width:50.5%;
     display:flex;
     height:5%;
     margin-bottom: 0.5vw;
@@ -827,6 +827,10 @@ html.is-animating .transition-fade{
 #ttipm{
     width: 49.5%;
     margin-left:0%;
+}
+
+#topbar{
+    display: flex;
 }
 
 .btn{
@@ -882,8 +886,3 @@ html.is-animating .transition-fade{
     color: #bc80bd;
 }
 */
-.cursive{
-    font-style: italic;
-    margin-top: 3%;
-    margin-left: 0.5%;
-}

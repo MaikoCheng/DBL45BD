@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>XLViz</title>
+    <title>DBL 45BD</title>
     <meta name="The dbl workgroup 45" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="style.css">
@@ -68,6 +68,7 @@
         </div>     
     </div>
     <div class="maindiv">
+      <div id="topbar">
         <div class="buttonsbar">
             <button id="home" class="btn"></button>
             <input type="button" class="btn" id="homebutton" onclick="location.href='index.html';" value="Home" />
@@ -77,8 +78,9 @@
             <button id="upload" class="btn"><p id="data">Upload data</p></button>
             <script src="../SCRIPTS/upload.js"></script>
             <button id="defset" class="btn"ß><p id="data">Default data</p></button>
-            <div id="ttipm"></div>
         </div>
+        <div id="ttipm"></div>
+      </div>
         <script src="../SCRIPTS/Defset.js"></script>
         <div class="visualizationdiv">
             <div class="graphsa" id="my_dataviz">
@@ -98,13 +100,11 @@
         </div>
         <div class="textdiv">
             <div id="main_text">
-                <span class="cursive"> SCROLL TO ZOOM.</span>
                 <p>
                 Each node represents an employee, and the links are emails between employees. The node size indicitates the number of emails and the diagram is sorted by job function.
                 </p>
             </div>
             <div id="main_text2">
-                <span class="cursive"> SCROLL TO ZOOM.</span>
                 <p>
                     For each employee, the sentiment of their emails to other employees is shown. Color indicitates sentiment. Any sentiment is between -1 and 1, with 0 being neutral.  
             </div>
