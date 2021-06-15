@@ -385,7 +385,7 @@
       .attr("fill", "white");
 
     // create a tooltip
-    var tooltip = d3.select("#my_dataviz2")
+    var tooltip = d3.select("#ttipm")
         .append("div")
           .style("visibility", "hidden")
           .attr("id","tooltip")
