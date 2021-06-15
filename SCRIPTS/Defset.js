@@ -280,14 +280,14 @@ var colorCell = d3.scaleLinear()
   .domain([-0.05, 0, 0.05])
     
 var getTitle = function (a){
-if(a != undefined){
-    for(i = 0; i < orderByJobtitle.length-1; i++){
-        if (a == orderByJobtitle[i].name){
-          return orderByJobtitle[i].jobtitle;
+  if(a != undefined){
+      for(i = 0; i < orderByJobtitle.length; i++){
+          if (a == orderByJobtitle[i].name){
+            return orderByJobtitle[i].jobtitle;
+          }
         }
-      }
-} else return undefined;
-  
+  } 
+    else return undefined;
 }
   
 //List of groups of jobtitles
