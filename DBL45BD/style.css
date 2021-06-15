@@ -668,7 +668,7 @@ h1.infoback{
     height:7vw;
     display: flex;
     justify-content: center;
-    background: url(dbl_photo.png);
+    background: url(dbl-photo.png);
     background-repeat: no-repeat;
     background-position:center;
     background-size: contain;
