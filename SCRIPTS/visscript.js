@@ -36,7 +36,7 @@
               "translate(" + margin.left + "," + margin.top + ")");
         d3.select("svg3").remove();
         var dataURL = reader.result;
-        document.getElementById("checkbox").style.display = "block";
+        //document.getElementById("checkbox").style.display = "block";
         document.getElementById("namea").style.display = "block";
         document.getElementById("nameb").style.display = "block";
 
