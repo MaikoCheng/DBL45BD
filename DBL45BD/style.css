@@ -191,7 +191,7 @@ button:hover{
     background-position: center;
 }
 #home2{
-    width: 10vw;
+    min-width: 10vw;
     height: 2.6vw;
     color:black;
     background-image: radial-gradient(rgb(0rgb(46, 46, 46) 0),#fff);
