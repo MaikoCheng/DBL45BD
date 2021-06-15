@@ -397,38 +397,41 @@ svg3.selectAll("text")
 // create a tooltip
 var tooltip = d3.select("#my_dataviz2")
       .append("div")
-      .style("opacity", 0)
+      .style("visibility", "hidden")
       .attr("id","tooltip")
       .attr("class", "tooltip")
       .style("z-index", 1000)
-      .style("background-color", "white")
+      .style("background-color", "black")
       .style("border", "solid")
       .style("border-width", "2px")
       .style("border-radius", "5px")
       .style("padding", "5px")
 
 // Three functions that change the tooltip when user hover / move / leave a cell
-var mouseover = function(d) {
+var mouseclick = function(d) {
   if(d.avgSentiment > 0){
-    tooltip.style("opacity", 1)
+    tooltip.style("visibility", "visible")
         .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromJobtitle + ") to " + d.toEmail + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were positive.")
-        .style("left", (d3.mouse(this)[0]+70) + "px")
-        .style("top", (d3.mouse(this)[1]) + "px")
   }else if(d.avgSentiment < 0){
-    tooltip.style("opacity", 1)
+    tooltip.style("visibility", "visible")
         .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromJobtitle + ") to " + d.toEmail + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were negative.")
-        .style("left", (d3.mouse(this)[0]+70) + "px")
-        .style("top", (d3.mouse(this)[1]) + "px")
   }else if(d.avgSentiment == 0){
-    tooltip.style("opacity", 1)
+    tooltip.style("visibility", "visible")
         .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromJobtitle + ") to " + d.toEmail + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were neutral.")
-        .style("left", (d3.mouse(this)[0]+70) + "px")
-        .style("top", (d3.mouse(this)[1]) + "px")
   }
+  nodes
+    .style("r", function(node){return d.fromEmail === node.name || d.toEmail === node.name ? 60 : 40})
+    .style("opacity", function(node){return d.fromEmail === node.name || d.toEmail === node.name ? 1 : 0.05})
+  links
+    .style('stroke', function (link) { return d.fromEmail === link.fromEmail && d.toEmail === link.toEmail ? color(d.fromJobtitle) : '#b8b8b8';})
+    .style('stroke-opacity', function (link) { return d.fromEmail === link.fromEmail && d.toEmail === link.toEmail? 5 : .2;})
+    .style('stroke-width', function (link) { return d.fromEmail === link.fromEmail && d.toEmail === link.toEmail ? 4 : 1;})
+  labels
+    .style("font-size", function(label){ return label.name === d.fromEmail || label.name === d.toEmail ? 200 : 20 } )
 }
 
 var mouseleave = function(d) {
-    tooltip.style("opacity", 0)
+    //tooltip.style("opacity", 0)
 }
 
 
@@ -463,8 +466,8 @@ var cells = svg3.selectAll()
         .attr("height", y.bandwidth() )
         .style("fill", function(d) { return colorCell(d.avgSentiment)})
         .attr("pointer-events", "all")
-        .on("mouseover", mouseover)
-        .on("mouseleave", mouseleave)
+        .on("click", mouseclick)
+        //.on("mouseleave", mouseleave)
       
   //create an array with the actual svg elements of the matrix
     var selectableElements = Array.from(document.querySelectorAll(".selectable"));
@@ -483,6 +486,7 @@ var cells = svg3.selectAll()
               brushedTo.push(d.getAttribute("data-To"))
           }
       })
+    tooltip.style("visibility", "hidden");
     links
       .style('stroke', function (link){ 
         if (brushedFrom.includes(link.fromEmail) && brushedTo.includes(link.toEmail)){
@@ -514,9 +518,6 @@ var cells = svg3.selectAll()
         if (label != undefined && (brushedFrom.includes(label.name) || brushedTo.includes(label.name))){ 
           return 50 
         }})
-      //.attr("y", function(label){if (d != undefined){ return label.name === d.name ? 12 : 0 }} )
-      //.attr("x", "-180px")
-      //.style("fill", function(label){if (d != undefined){ return color(d.jobtitle)}})  
     }      
   });
 })
