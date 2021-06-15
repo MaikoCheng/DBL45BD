@@ -886,3 +886,8 @@ html.is-animating .transition-fade{
     color: #bc80bd;
 }
 */
+.cursive{
+    font-style: italic;
+    margin-top: 3%;
+    margin-left: 0.5%;
+}
