@@ -350,26 +350,26 @@
     .shapeHeight(50)
     .on('cellover',function(d){
       if(d<0){
-        tooltip.style("opacity", 1)
+        tooltip.style("visibility", "visible")
             .html("This value means a negative average sentiment")
             .style("left", (d3.mouse(this)[0]+70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px");
       }
       else if(d==0){
-        tooltip.style("opacity", 1)
+        tooltip.style("visibility", "visible")
             .html("This value means a neutral average sentiment")
             .style("left", (d3.mouse(this)[0]+70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px");
       }
       else{
-        tooltip.style("opacity", 1)
+        tooltip.style("visibility", "visible")
             .html("This value means a positive average sentiment")
             .style("left", (d3.mouse(this)[0]+70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px");
       }
     })
     .on('cellout', function(d){
-        tooltip.style("opacity", 0)
+        tooltip.style("visibility", "hidden")
     }); 
   
     //Create an actual svg element for the legend
