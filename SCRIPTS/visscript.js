@@ -391,7 +391,7 @@
           .attr("id","tooltip")
           .attr("class", "tooltip")
           //.style("position", "relative")
-          .style("background-color", "black")
+          .style("background-color", "white")
           .style("border", "solid")
           .style("border-width", "2px")
           .style("border-radius", "5px")
