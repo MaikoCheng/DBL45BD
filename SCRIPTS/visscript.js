@@ -388,6 +388,33 @@
     .on('cellout', function(d){
         tooltip.style("visibility", "hidden")
     }); 
+	      
+	      
+//Circles job title legend adj matrix
+svg3.selectAll("nodes")
+  .data(tokeep)
+  .enter()
+  .append('circle')
+    .attr("cx",-1230)
+    .attr("cy", function(d,i){ return -1100 + i*50})
+    .attr("r", 25)
+    .style("fill", function(d){ return color(d)})
+    .attr("position", "fixed")
+    .attr("transform", "translate(588,1675)");
+
+//Labels job title legend adj matrix
+svg3.selectAll("labels")
+  .data(tokeep)
+  .enter()
+  .append("text")
+    .attr("x", -1160)
+    .attr("y", function(d,i){ return -1080 + i*50})
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+    .style("font-size", "50px")
+    .attr("transform", "translate(578,1665)");
   
     //Create an actual svg element for the legend
     svg3.append("g")
