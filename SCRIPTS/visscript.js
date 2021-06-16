@@ -19,6 +19,11 @@
     width = 1800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
   
+    // Zoom for arc diagram
+    var zoomArc = d3.zoom()
+      .scaleExtent([0.1, 1])
+      .on("zoom", function () {svg.attr("transform", d3.event.transform)})
+
   // append the svg object to the body of the page
     d3.select('svg').remove();
     d3.select("svg3").remove();
@@ -28,17 +33,15 @@
         .attr("width", '100%')
         .attr("height", "100%")
         .attr("id", "svg4id")
-        .call(d3.zoom().on("zoom", function () {
-        svg.attr("transform", d3.event.transform)
-          }))
+        .call(zoomArc)
       .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
         d3.select("svg3").remove();
-        var dataURL = reader.result;
-        //document.getElementById("checkbox").style.display = "block";
-        document.getElementById("namea").style.display = "block";
-        document.getElementById("nameb").style.display = "block";
+
+    var dataURL = reader.result;
+    document.getElementById("namea").style.display = "block";
+    document.getElementById("nameb").style.display = "block";
 
       //Read the input data
       d3.csv(dataURL, function(data) {
@@ -87,15 +90,28 @@
         nodesArray[n.toId] = {
           id: n.toId,
           name: n.toEmail.replace(/@enron.com/g, ""),
-          jobtitle: n.toJobtitle
+          jobtitle: n.toJobtitle,
+          totalMails: getTotalMails(n.toId)
         };
         nodesArray[n.fromId] = {
             id: n.fromId,
             name: n.fromEmail.replace(/@enron.com/g, ""),
-            jobtitle: n.fromJobtitle
+            jobtitle: n.fromJobtitle,
+            totalMails: getTotalMails(n.fromId)
         };
     });
     
+    //Calculate the total mails sent by one person
+    function getTotalMails(fromId) {
+      var totalMails = 0;
+      linksArray.forEach(function(link) {
+        if (fromId == link.fromId) {
+          totalMails = totalMails + link.totalMails;
+        }
+      })
+      return totalMails;
+    }
+
     var filtNodesByJobtitle = [];
     nodesArray.forEach(function(node) {
       if (tokeep.includes(node.jobtitle)) {
@@ -107,142 +123,139 @@
       var orderByJobtitle = filtNodesByJobtitle.sort(function(a, b){
       return d3.ascending(a.jobtitle, b.jobtitle)});
 
-        // List of node names
-        var allNames = filtNodesByJobtitle.map(function(d){return d.name})
+      // List of node names
+      var allNames = filtNodesByJobtitle.map(function(d){return d.name})
 
-        // List of groups
-        // var allJobtitles = nodesArray.map(function(d){return d.jobtitle})
-        // allJobtitles = [...new Set(allJobtitles)]
+      // List of groups
+      // var allJobtitles = nodesArray.map(function(d){return d.jobtitle})
+      // allJobtitles = [...new Set(allJobtitles)]
+    
+      // A color scale for groups:
+      var color = d3.scaleOrdinal()
+        .domain(tokeep)
+        .range(d3.schemeSet3);
       
-        // A color scale for groups:
-        var color = d3.scaleOrdinal()
-          .domain(tokeep)
-          .range(d3.schemeSet3);
+      // A linear scale for node size
+      var size = d3.scaleLinear()
+        .domain([0,d3.max(orderByJobtitle, function(d) {return d.totalMails})])
+        .range([20,200]);
       
-        // A linear scale for node size
-        var size = d3.scaleLinear()
-          .domain([1,149])
-          .range([20,200]);
+      // A linear scale to position the nodes on the X axis
+      var x = d3.scalePoint()
+        .range([0, width + 5000])
+        .domain(allNames)
+
+      // Add the links
+      var links = svg
+        .selectAll('mylinks')
+        .data(linksArray)
+        .enter()
+        .append('path')
+        .attr('d', function (d) {
+          start = x(d.toEmail)    // X position of start node on the X axis
+          let end = x(d.fromEmail)      // X position of end node
+          
+          return ['M', start, height-30,    // the arc starts at the coordinate x=start, y=height-30 (where the starting node is)
+            'A',                            // This means we're gonna build an elliptical arc
+            (start - end)/2, ',',    // Next 2 lines are the coordinates of the inflexion point. Height of this point is proportional with start - end distance
+            (start - end)/2, 0, 0, ',',
+            start < end ? 1 : 0, end, ',', height-30] // We always want the arc on top. So if end is before start, putting 0 here turn the arc upside down.
+            .join(' ');
+        })
+        .style("fill", "none")
+        .attr("stroke", "grey")
+        .style("stroke-width", 1)
+
+      // Add the circle for the nodes
+      var nodes = svg
+        .selectAll("mynodes")
+        .data(orderByJobtitle)
+        .enter()
+        .append("circle")
+          .attr("cx", function(d){if (d != undefined){ return(x(d.name))} else {return -10000}})
+          .attr("cy", height+10)
+          .style("r", function(d){if (d != undefined){ return size(d.totalMails)} else {return 0}})
+          .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)} else {return "transparent"}})
+          .attr("stroke", function(d){if (d != undefined){ return "white"} else {return "transparent"}})
+          .style("opacity", 1)
+              
+      // Add name labels to the nodes
+      var labels = svg
+        .selectAll("mylabels")
+        .data(orderByJobtitle)
+        .enter()
+        .append("text")
+          .attr("x", "-100px")
+          .attr("y", 75)
+          .text(function(d){if (d != undefined){ return(d.name)}})
+          .style("text-anchor", "end")
+          .attr("transform", function(d){if (d != undefined){ return( "translate(" + x(d.name) + "," + (height-15) + ")rotate(-45)")}})
+          .style("font-size", 50)
+          .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)}});
+    
       
-
-        // A linear scale to position the nodes on the X axis
-        var x = d3.scalePoint()
-          .range([0, width + 5000])
-          .domain(allNames)
-
-        // Add the links
-        var links = svg
-          .selectAll('mylinks')
-          .data(linksArray)
-          .enter()
-          .append('path')
-          .attr('d', function (d) {
-            start = x(d.toEmail)    // X position of start node on the X axis
-            let end = x(d.fromEmail)      // X position of end node
-            
-            return ['M', start, height-30,    // the arc starts at the coordinate x=start, y=height-30 (where the starting node is)
-              'A',                            // This means we're gonna build an elliptical arc
-              (start - end)/2, ',',    // Next 2 lines are the coordinates of the inflexion point. Height of this point is proportional with start - end distance
-              (start - end)/2, 0, 0, ',',
-              start < end ? 1 : 0, end, ',', height-30] // We always want the arc on top. So if end is before start, putting 0 here turn the arc upside down.
-              .join(' ');
-          })
-          .style("fill", "none")
-          .attr("stroke", "grey")
-          .style("stroke-width", 1)
-
-        // Add the circle for the nodes
-        var nodes = svg
-          .selectAll("mynodes")
-          .data(orderByJobtitle)
-          .enter()
-          .append("circle")
-            .attr("cx", function(d){if (d != undefined){ return(x(d.name))} else {return -10000}})
-            .attr("cy", height+10)
-            .style("r", function(d){if (d != undefined){ return 50} else {return 0}})
-            .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)} else {return "transparent"}})
-            .attr("stroke", function(d){if (d != undefined){ return "white"} else {return "transparent"}})
-            .style("opacity", 1)
-							  
-        // Add name labels to the nodes
-        var labels = svg
-          .selectAll("mylabels")
-          .data(orderByJobtitle)
-          .enter()
-          .append("text")
-            .attr("x", "-100px")
-            .attr("y", 75)
-            .text(function(d){if (d != undefined){ return(d.name)}})
-            .style("text-anchor", "end")
-            .attr("transform", function(d){if (d != undefined){ return( "translate(" + x(d.name) + "," + (height-15) + ")rotate(-45)")}})
-            .style("font-size", 50)
-            .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)}});
-      
-        
-        // Add the highlighting functionality
-        nodes
-          .on('mouseover', function (d) {
-            // Highlight the node: all nodes but the selected node get a lower opacity
-            nodes
-                .style('opacity', "5%")
-              d3.select(this)
-                .style('opacity', 1)
-                .style('r', 60)
-
-            // Highlight the links
-            links
-              .style('stroke', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? color(d.jobtitle) : '#b8b8b8';}})
-              .style('stroke-opacity', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? 5 : .2;}})
-              .style('stroke-width', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? 4 : 1;}})
-
-            //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
-            labels
-              .style("font-size", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
-
-            cells
-              .style("opacity", function(cell){return cell.fromEmail === d.name || cell.toEmail === d.name ? 1 : 0.05})
-          })
-
-          //All nodes back to normal when no node is selected
-          .on('mouseout', mouseout)
-
-        function mouseout() {
+      // Add the highlighting functionality
+      nodes
+        .on('mouseover', function (d) {
+          // Highlight the node: all nodes but the selected node get a lower opacity
           nodes
-            .style('opacity', 1)
-            .style('r', 40)
-          links
-            .style('stroke', 'grey')
-            .style('stroke-opacity', .8)
-            .style('stroke-width', '1')
-          labels
-            .style("font-size", 50 )
-          cells
-            .style("opacity", 1)
-        }
+              .style('opacity', "5%")
+            d3.select(this)
+              .style('opacity', 1)
 
-        //nodes in the legend
-        svg.selectAll("nodes")
-          .data(tokeep)
-          .enter()
-          .append('circle')
-            .attr("cx",-1230)
-            .attr("cy", function(d,i){ return -1100 + i*150})
-            .attr("r", 50)
-            .style("fill", function(d){ return color(d)})
-            .attr("position", "fixed")
-        
-        //Labels in legend
-        svg.selectAll("labels")
-          .data(tokeep)
-          .enter()
-          .append("text")
-            .attr("x", -1160)
-            .attr("y", function(d,i){ return -1080 + i*150})
-            .style("fill", function(d){ return color(d)})
-            .text(function(d){ return d})
-            .attr("text-anchor", "left")
-            .style("alignment-baseline", "middle")
-            .style("font-size", "150px");
+          // Highlight the links
+          links
+            .style('stroke', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? color(d.jobtitle) : '#b8b8b8';}})
+            .style('stroke-opacity', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? 5 : .2;}})
+            .style('stroke-width', function (link_d) {if (d != undefined){ return link_d.fromEmail === d.name || link_d.toEmail === d.name ? 4 : 1;}})
+
+          //Highlight the label: font-size increases for the selected node, other nodes get smaller font-size
+          labels
+            .style("font-size", function(label_d){if (label_d != undefined){ return label_d.name === d.name ? 200 : 20 }} )
+
+          cells
+            .style("opacity", function(cell){return cell.fromEmail === d.name || cell.toEmail === d.name ? 1 : 0.05})
+        })
+
+        //All nodes back to normal when no node is selected
+        .on('mouseout', mouseout)
+
+      function mouseout() {
+        nodes
+          .style('opacity', 1)
+        links
+          .style('stroke', 'grey')
+          .style('stroke-opacity', .8)
+          .style('stroke-width', '1')
+        labels
+          .style("font-size", 50 )
+        cells
+          .style("opacity", 1)
+      }
+
+      //nodes in the legend
+      svg.selectAll("nodes")
+        .data(tokeep)
+        .enter()
+        .append('circle')
+          .attr("cx",-1230)
+          .attr("cy", function(d,i){ return -1100 + i*150})
+          .attr("r", 50)
+          .style("fill", function(d){ return color(d)})
+          .attr("position", "fixed")
+      
+      //Labels in legend
+      svg.selectAll("labels")
+        .data(tokeep)
+        .enter()
+        .append("text")
+          .attr("x", -1160)
+          .attr("y", function(d,i){ return -1080 + i*150})
+          .style("fill", function(d){ return color(d)})
+          .text(function(d){ return d})
+          .attr("text-anchor", "left")
+          .style("alignment-baseline", "middle")
+          .style("font-size", "150px");
 
       
   
@@ -253,6 +266,11 @@
     var margin2 = {top: 70, right: 10, bottom: 100, left: 70},
     width2 = 1800 - margin2.left - margin2.right,
     height2 = 1800 - margin2.top - margin2.bottom;
+
+    // Zoom for matrix
+    var zoomMatrix = d3.zoom()
+    .scaleExtent([0.3, 6])
+    .on("zoom", function () {svg3.attr("transform", d3.event.transform)})
     
     // append the svg object to the body of the page
     var svg3 = d3.select("#my_dataviz2")
@@ -260,8 +278,7 @@
             .attr("width", '100%')
             .attr("height", '100%')
             .attr("id", "svg3id")
-            .call(d3.zoom().on("zoom", function () {
-              svg3.attr("transform", d3.event.transform)}))
+            .call(zoomMatrix)
            .style("background-color", "transparent")
           .append("g")
             .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");  
@@ -412,7 +429,6 @@
               + d.avgSentiment + " which means that overall the e-mails were neutral.")
       }
       nodes
-        .style("r", function(node){return d.fromEmail === node.name || d.toEmail === node.name ? 60 : 40})
         .style("opacity", function(node){return d.fromEmail === node.name || d.toEmail === node.name ? 1 : 0.05})
       links
         .style('stroke', function (link) { return d.fromEmail === link.fromEmail && d.toEmail === link.toEmail ? color(d.fromJobtitle) : '#b8b8b8';})
@@ -494,14 +510,10 @@
           }})
 
         nodes
-          .style('r', function (node){ 
-            if (node != undefined && (brushedFrom.includes(node.name) || brushedTo.includes(node.name))) {
-              return 60;
-            }})
           .style('opacity', function (node){ 
             if (node != undefined && (brushedFrom.includes(node.name) || brushedTo.includes(node.name))){
               return 1
-            }})
+            } else { return 0.05}})
 
         labels
           .style("font-size", function(label){

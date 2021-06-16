@@ -3,18 +3,22 @@ let tokeep = ["Employee", "Vice President", "Manager", "Unknown","President","Tr
 //console.log(tokeep)
 var defbutton = document.getElementById("defset");
 defbutton.addEventListener("click", function(){
-if(document.getElementById("svgid") != null){
+if (document.getElementById("svgid") != null){
     document.getElementById("svgid").remove();
     d3.select("svg2").remove();
     console.log("sheesh")
-}
-if(document.getElementById("svg3id") != null){
+  }
+
+if (document.getElementById("svg3id") != null){
     document.getElementById("svg3id").remove();
     document.getElementById("tooltip").remove();
-}
-if(document.getElementById("svg4id") != null){
+  }
+
+if (document.getElementById("svg4id") != null){
   document.getElementById("svg4id").remove();
-}
+  }
+
+
 //ARC DIAGRAM
 
 // set the dimensions and margins of the graph
@@ -22,21 +26,24 @@ var margin = {top: 0, right: 50, bottom: 160, left: 50},
 width = 1800 - margin.left - margin.right,
 height = 600 - margin.top - margin.bottom;
 
+// Zoom for arc diagram
+var zoomArc = d3.zoom()
+  .scaleExtent([0.1, 1])
+  .on("zoom", function () {svg.attr("transform", d3.event.transform)})
+
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
     .append("svg")
     .attr("id", "svgid")
     .attr("width", '100%')
     .attr("height", "100%")
-    .call(d3.zoom().on("zoom", function () {
-    svg.attr("transform", d3.event.transform)
-        }))
+    .call(zoomArc)
     .append("g")
     .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
 
-// Input data
+// Input default data
 
 var dataURL = "../DBL45BD/enron-v1.csv";
 document.getElementById("checkbox").style.display = "block";
@@ -84,7 +91,6 @@ nestedData.forEach(function (fromId) {
       }
     })
 })
-console.log(nestedData);
 
 //Create an object for each unique employee. Their id corresponds to the index in the nodes array.
 var nodesArray = [];
@@ -92,14 +98,27 @@ data.forEach(function (n) {
     nodesArray[n.toId] = {
       id: n.toId,
       name: n.toEmail.replace(/@enron.com/g, ""),
-      jobtitle: n.toJobtitle
+      jobtitle: n.toJobtitle,
+      totalMails: getTotalMails(n.toId)
     };
     nodesArray[n.fromId] = {
         id: n.fromId,
         name: n.fromEmail.replace(/@enron.com/g, ""),
-        jobtitle: n.fromJobtitle
+        jobtitle: n.fromJobtitle,
+        totalMails: getTotalMails(n.fromId)
     };
 });
+
+//Calculate the total mails sent by one person
+function getTotalMails(fromId) {
+  var totalMails = 0;
+  linksArray.forEach(function(link) {
+    if (fromId == link.fromId) {
+      totalMails = totalMails + link.totalMails;
+    }
+  })
+  return totalMails;
+}
 
 var filtNodesByJobtitle = [];
     nodesArray.forEach(function(node) {
@@ -107,12 +126,12 @@ var filtNodesByJobtitle = [];
         filtNodesByJobtitle.push(node);
       }
     });
-    console.log(filtNodesByJobtitle)
+    //console.log(filtNodesByJobtitle)
 
   //Sort the nodes by jobtitle
   var orderByJobtitle = filtNodesByJobtitle.sort(function(a, b){
   return d3.ascending(a.jobtitle, b.jobtitle)});
-  console.log(orderByJobtitle)
+  console.log(d3.max(orderByJobtitle, function(d) {return d.totalMails}))
 
     // List of node names
     var allNames = filtNodesByJobtitle.map(function(d){return d.name})
@@ -128,10 +147,9 @@ var filtNodesByJobtitle = [];
   
     // A linear scale for node size
     var size = d3.scaleLinear()
-      .domain([1,149])
+      .domain([0,d3.max(orderByJobtitle, function(d) {return d.totalMails})])
       .range([20,200]);
   
-
     // A linear scale to position the nodes on the X axis
     var x = d3.scalePoint()
       .range([0, width + 5000])
@@ -166,7 +184,7 @@ var filtNodesByJobtitle = [];
       .append("circle")
         .attr("cx", function(d){if (d != undefined){ return(x(d.name))} else {return -10000}})
         .attr("cy", height+10)
-        .style("r", function(d){if (d != undefined){ return 50} else {return 0}})
+        .style("r", function(d){if (d != undefined){ return size(d.totalMails)} else {return 0}})
         .style("fill", function(d){if (d != undefined){ return color(d.jobtitle)} else {return "transparent"}})
         .attr("stroke", function(d){if (d != undefined){ return "white"} else {return "transparent"}})
         .style("opacity", 1)
@@ -194,7 +212,6 @@ var filtNodesByJobtitle = [];
             .style('opacity', "5%")
           d3.select(this)
             .style('opacity', 1)
-            .style('r', 60)
 
         // Highlight the links
         links
@@ -216,7 +233,6 @@ var filtNodesByJobtitle = [];
       function mouseout() {
         nodes
           .style('opacity', 1)
-          .style('r', 40)
         links
           .style('stroke', 'grey')
           .style('stroke-opacity', .8)
@@ -261,14 +277,18 @@ var margin2 = {top: 70, right: 10, bottom: 100, left: 70},
 width2 = 1800 - margin2.left - margin2.right,
 height2 = 1800 - margin2.top - margin2.bottom;
 
+// Zoom for matrix
+var zoomMatrix = d3.zoom()
+  .scaleExtent([0.3, 6])
+  .on("zoom", function () {svg3.attr("transform", d3.event.transform)})
+
 // append the svg object to the body of the page
 var svg3 = d3.select("#my_dataviz2")
       .append("svg")
         .attr("width", '100%')
         .attr("height", '100%')
         .attr("id", "svg3id")
-        .call(d3.zoom().on("zoom", function () {
-          svg3.attr("transform", d3.event.transform)}))
+        .call(zoomMatrix)
        .style("background-color", "transparent")
       .append("g")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");  
@@ -420,7 +440,6 @@ var mouseclick = function(d) {
         .html("The average sentiment of the e-mails<br>from " + d.fromEmail + " (" + d.fromJobtitle + ") to " + d.toEmail + " (" + d.toJobtitle + ") is: " + d.avgSentiment + " which means that overall the e-mails were neutral.")
   }
   nodes
-    .style("r", function(node){return d.fromEmail === node.name || d.toEmail === node.name ? 60 : 40})
     .style("opacity", function(node){return d.fromEmail === node.name || d.toEmail === node.name ? 1 : 0.05})
   links
     .style('stroke', function (link) { return d.fromEmail === link.fromEmail && d.toEmail === link.toEmail ? color(d.fromJobtitle) : '#b8b8b8';})
@@ -504,14 +523,10 @@ var cells = svg3.selectAll()
       }})
 
     nodes
-      .style('r', function (node){ 
-        if (node != undefined && (brushedFrom.includes(node.name) || brushedTo.includes(node.name))) {
-          return 60;
-        }})
       .style('opacity', function (node){ 
         if (node != undefined && (brushedFrom.includes(node.name) || brushedTo.includes(node.name))){
           return 1
-        }})
+        } else { return 0.05}})
 
     labels
       .style("font-size", function(label){
