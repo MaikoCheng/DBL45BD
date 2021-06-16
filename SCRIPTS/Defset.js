@@ -28,7 +28,7 @@ height = 600 - margin.top - margin.bottom;
 
 // Zoom for arc diagram
 var zoomArc = d3.zoom()
-  .scaleExtent([0.1, 1])
+  .scaleExtent([0.1, 0.7])
   .on("zoom", function () {svg.attr("transform", d3.event.transform)})
 
 // append the svg object to the body of the page
