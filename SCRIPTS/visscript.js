@@ -21,7 +21,7 @@
   
     // Zoom for arc diagram
     var zoomArc = d3.zoom()
-      .scaleExtent([0.1, 0.7])
+      .scaleExtent([0.07, 0.7])
       .on("zoom", function () {svg.attr("transform", d3.event.transform)})
 
   // append the svg object to the body of the page
@@ -269,7 +269,7 @@
 
     // Zoom for matrix
     var zoomMatrix = d3.zoom()
-    .scaleExtent([0.3, 6])
+    .scaleExtent([0.2, 6])
     .on("zoom", function () {svg3.attr("transform", d3.event.transform)})
     
     // append the svg object to the body of the page
