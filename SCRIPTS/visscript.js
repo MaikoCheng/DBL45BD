@@ -2,8 +2,8 @@
 
 // Input data
 var openFile = function(event) {
-  if (document.getElementById("tooltipdefid") != null) {
-    document.getElementById("tooltipdefid").remove();
+  if (document.getElementById("tooltip") != null) {
+    document.getElementById("tooltip").remove();
   }
 
   var input = event.target;
